@@ -16,6 +16,6 @@ int main()
     decoration();
     printf("Inventory Management System\n");
     decoration();
-
+    // oswald is testing here:)
     return 0;
 }
