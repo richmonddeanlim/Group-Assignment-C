@@ -11,9 +11,21 @@ void decoration()
     printf("\n");
 }
 
+// centering an text
+void center(int num)
+{
+    int len_of_string;
+
+    for(int i = 0; i < num; i++)
+    {
+        printf(" ");
+    }
+}
+
 int main()
 {
     decoration();
+    center(10);
     printf("Inventory Management System\n");
     decoration();
 
