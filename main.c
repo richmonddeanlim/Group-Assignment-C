@@ -12,7 +12,7 @@ void decoration()
 }
 
 // centering an text
-void center(int num)
+void add_space(int num)
 {
     int len_of_string;
 
@@ -28,6 +28,6 @@ int main()
     center(10);
     printf("Inventory Management System\n");
     decoration();
-    // oswald is testing here:)
+
     return 0;
 }
