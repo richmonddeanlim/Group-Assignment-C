@@ -1,9 +1,11 @@
 #include <stdio.h>
+#define default_border 60
 
 // decoration for display
-void border()
+// the default is 60, so if want to adjust can just add the number of '-' that want to be printed"
+void border(int num)
 {
-    for(int i = 0; i < 60; i++)
+    for(int i = 0; i < num; i++)
     {
         printf("-");
     }
