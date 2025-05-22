@@ -35,11 +35,12 @@ int main() {
                     break;
             }
         }
-        printf("%s",menutext);
-        printf("You have succesfully logged out.\n\n");
-        break;
+        if (selection == 3) {
+            break;
+        }
     }
-    
+    printf("%s",menutext);
+    printf("You have succesfully logged out.\n\n");    
 }
 
 void user() {
