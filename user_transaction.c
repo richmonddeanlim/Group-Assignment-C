@@ -3,42 +3,47 @@
 
 const char *menutext = "\n--- User and Transaction Management System ---\n\n";
 
-bool flag = true;
-
-void user(int selection);
-void transactions(int selection);
+void user();
+void transactions();
 
 int main() {
     int selection;
-    while (flag==true) {
+    while (1) {
+        bool validanswer = false;
         printf("%s",menutext);
         printf("Welcome to User and Transaction Management System!\n\n");
         printf("1. Modify users\n");
         printf("2. Modify transaction records\n\n");
-        while (flag == true) {
+        while (validanswer == false) {
             printf(">>>   ");
             scanf("%d",&selection);
             switch (selection) {
                 case 1:
-                    user(selection);
-                    flag = false;
+                    user();
+                    validanswer = true;    
                     break;
                 case 2:
-                    transactions(selection);
-                    flag = false;
+                    transactions();
+                    validanswer = true;   
+                    break;
+                case 3:
+                    validanswer = true;
                     break;
                 default:
                     printf("\nInvalid choice. Please try again.\n");
                     while (getchar() != '\n');
-                    continue;
-                break;
+                    break;
             }
-        }  
-        flag = true;
-    }    
+        }
+        printf("%s",menutext);
+        printf("You have succesfully logged out.\n\n");
+        break;
+    }
+    
 }
 
-void user(int selection) {
+void user() {
+    int selection;
     printf("%s",menutext);
     printf("1. Add new user\n");
     printf("2. Update user information\n");
@@ -58,10 +63,11 @@ void user(int selection) {
             break;   
         case 5:
             break;
-            }
+        }
 }
 
-void transactions(int selection) {
+void transactions() {
+    int selection;
     printf("%s",menutext);
     printf("1. Add new transaction record\n");
     printf("2. Update transaction status\n");
