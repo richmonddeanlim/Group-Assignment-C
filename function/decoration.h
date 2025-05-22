@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 // decoration for display
-void decoration()
+void border()
 {
     for(int i = 0; i < 60; i++)
     {

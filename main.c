@@ -3,10 +3,10 @@
 
 int main()
 {
-    decoration();
-    add_space(10);
+    border();
+    add_space(15);
     printf("Inventory Management System\n");
-    decoration();
+    border();
 
     return 0;
 }
