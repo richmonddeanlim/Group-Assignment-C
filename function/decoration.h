@@ -13,7 +13,7 @@ void border(int num)
     printf("\n");
 }
 
-// centering an text
+// creating a white space for centering+ text
 void add_space(int num)
 {
     int len_of_string;
