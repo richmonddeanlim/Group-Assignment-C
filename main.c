@@ -1,5 +1,5 @@
-#include "function/decoration.h"
 #include <stdio.h>
+#include "function/decoration.c"
 
 int main()
 {
