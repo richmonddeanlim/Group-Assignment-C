@@ -1,4 +1,6 @@
-#include <stdio.h>
+#ifndef INVENTORY_RECORD_H
+#define INVENTORY_RECORD_H
+
 
 struct inventory_record
 {
@@ -7,3 +9,4 @@ struct inventory_record
     char status[50];
 };
 
+#endif
