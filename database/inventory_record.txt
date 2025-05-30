@@ -1,1 +1,1 @@
-product_id,quantity,status
+date,product_id,quantity,status
