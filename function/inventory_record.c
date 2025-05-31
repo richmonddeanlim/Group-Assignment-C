@@ -6,27 +6,28 @@
 // data structure for the inventory_record
 struct inventory_record
 {
+    char date[20];
     char product_id[100];
     int quantity;
     char status[50];
 };
 
 // option validation function
-void option_validation(char *input_text,int *choice,int option)
+void option_validation(char *input_text,int *choice,int range)
 {
     while(1)
     {
         printf("%s", input_text); 
         if(scanf("%d", choice))
         {
-            for(int i = 0; i < option;i++)
+            for(int i = 0; i < range;i++)
             {
                 if(*choice == i + 1)
                 {
                     return;
                 }
     
-                else if(*choice != i && i == option - 1)
+                else if(*choice != i && i == range - 1)
                 {
                     printf("There is no such option\n");
                 }
@@ -42,9 +43,23 @@ void option_validation(char *input_text,int *choice,int option)
 }
 
 // int valdiation
-
-
-
+void integer_valdiation(char *input_text,int *user_input )
+{
+    while(1)
+    {
+        printf("%s", input_text); 
+        if(scanf("%d", user_input))
+        {
+            return;
+        }
+    
+        else
+        {   char ch;
+            printf("Pls input an integer\n");
+            while ((ch = getchar()) != '\n' && ch != EOF);
+        }
+    }
+}
 
 // inventory record management menu
 int menu()
@@ -58,6 +73,7 @@ int menu()
     printf("2. Update stock level\n");
     printf("3. Delete Discontinued Stock\n");
     printf("4. View Current Invetory\n");
+    printf("5. Exit\n");
     border(default_border);
     
     // geting user choices
@@ -72,33 +88,46 @@ int menu()
 void add_record()
 {
     struct inventory_record record;
+    while(1)
+    {
+        int arr_size = 0;
 
-    printf("");
-     
+        // getting user input
+        printf("Enter the date (dd-mm-yyyy): ");
+        scanf("%s", &record.date);
+
+        // date validation
+        for(int i = 0; i < record.date[i] != '\0'; i++) // '\0' represent null value
+        {
+            arr_size += 1;
+        }
+        
+        char ch;
+        if(arr_size == 10)
+        {
+            break;
+        }
+        
+        else if(arr_size < 10)
+        {
+            printf("Pls input the right format\n");
+            while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
+        }
+        
+        else
+        {
+            printf("Pls input the right format\n");
+            while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
+        }   
+    }
     
+
 }
-
-
-
 
 int main()
 {
 
-    // giving menu interface for user
-    border(default_border);
-    add_space(15);
-    printf("Iventory and Stock management\n");
-    border(default_border);
-    printf("1. Add stock inventory record\n");
-    printf("2. Update stock level\n");
-    printf("3. Delete Discontinued Stock\n");
-    printf("4. View Current Invetory\n");
-    border(default_border);
-    
-    // geting user choices
-    int choice;
-    option_validation("Enter your choice: ",&choice,5);
-    printf("%d", choice);
-
+    // menu();
+    add_record();
     return 0;
 }   
