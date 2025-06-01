@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include "../header/decoration.h"
 #include "decoration.c"
 
@@ -103,9 +104,31 @@ void add_record()
         }
         
         char ch;
+        // further date validation
         if(arr_size == 10)
         {
-            break;
+            // ensure the date not above 31
+            if( (int) (((record.date[0] - '0') * 10) + record.date[1] - '0') < 31) // subtract with '0' will return the int value (converting ascii to int)
+            {
+                // ensure the month not above 12
+                if((int) (((record.date[3] - '0') * 10) + record.date[4] - '0') < 12)
+                {
+                    break;
+                }
+
+                else
+                {
+                    printf("The monnth is more than 31, pls stry again\n");
+                    while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input     
+                }
+            }
+
+            else
+            {
+                printf("The date is more than 31, pls stry again\n");
+                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input     
+            }
+
         }
         
         else if(arr_size < 10)
@@ -120,13 +143,10 @@ void add_record()
             while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
         }   
     }
-    
-
 }
 
 int main()
 {
-
     // menu();
     add_record();
     return 0;
