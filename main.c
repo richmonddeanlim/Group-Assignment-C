@@ -1,16 +1,14 @@
-//Run With gcc main.c function/user_credentials.c -o program
+//Run With gcc main.c function/staff_credentials.c -o program (This if you run from main.c)
+//Run with gcc Group-Assignment-C-main/main.c Group-Assignment-C-main/function/staff_credentials.c -o Group-Assignment-C-main/program (This if you run from Group-Assignment-C-main)
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <windows.h>
+
 #include "header/inventory_system.h"
 #include "function/decoration.c"
 
 
-extern User users[MAX_USERS];
+extern Staff users[MAX_USERS];
 extern int userCount;
-extern User currentUser;
+extern Staff currentUser;
 
 int login() {
     char username[50];
@@ -20,7 +18,7 @@ int login() {
     while (attempts > 0) {
         printf("\n=== Login System ===\n");
         printf("Username: ");
-        scanf("%s", username);
+        scanf("%49s", username);
         printf("Password: ");
         scanf("%s", password);
 
@@ -44,16 +42,27 @@ int login() {
 
 
 // Role 1 Menu - Core System and Product Management (This is just a placeholder)
-void role1Menu() {
+void role1Menu(int isAdmin) {
     int choice;
     do {
         clearScreen();
+        border(default_border);
+        add_space(15);
+        printf("Inventory Management System\n");
+        border(default_border);
+        printf("Current User: %s (Role: %s)\n", currentUser.username, currentUser.role);
+        border(default_border);
         printf("\n=== Core System and Product Management ===\n");
         printf("1. Add New Product\n");
         printf("2. Update Product Information\n");
         printf("3. Delete Product\n");
         printf("4. View Product Details\n");
-        printf("5. Return to Main Menu\n");
+        if (isAdmin) {
+            printf("5. Return to Main Menu\n");
+        } else {
+            printf("5. Logout\n");
+            printf("6. Exit\n");
+        }
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -76,6 +85,12 @@ void role1Menu() {
                 break;
             case 5:
                 return;
+            case 6:
+                if (!isAdmin) {
+                    printf("\nThank you for using the system. Goodbye!\n");
+                    exit(0);
+                }
+                break;
             default:
                 printf("\nInvalid choice! Please try again.\n");
                 system("pause");
@@ -84,16 +99,27 @@ void role1Menu() {
 }
 
 // Role 2 Menu - Inventory and Stock Management (This is just a placeholder)
-void role2Menu() {
+void role2Menu(int isAdmin) {
     int choice;
     do {
         clearScreen();
+        border(default_border);
+        add_space(15);
+        printf("Inventory Management System\n");
+        border(default_border);
+        printf("Current User: %s (Role: %s)\n", currentUser.username, currentUser.role);
+        border(default_border);
         printf("\n=== Inventory and Stock Management ===\n");
         printf("1. Add Stock Inventory\n");
         printf("2. Update Stock Levels\n");
         printf("3. Remove Stock Items\n");
         printf("4. View Inventory Levels\n");
-        printf("5. Return to Main Menu\n");
+        if (isAdmin) {
+            printf("5. Return to Main Menu\n");
+        } else {
+            printf("5. Logout\n");
+            printf("6. Exit\n");
+        }
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -116,6 +142,12 @@ void role2Menu() {
                 break;
             case 5:
                 return;
+            case 6:
+                if (!isAdmin) {
+                    printf("\nThank you for using the system. Goodbye!\n");
+                    exit(0);
+                }
+                break;
             default:
                 printf("\nInvalid choice! Please try again.\n");
                 system("pause");
@@ -124,16 +156,27 @@ void role2Menu() {
 }
 
 // Role 3 Menu - Category and Supplier Management (This is just a placeholder)
-void role3Menu() {
+void role3Menu(int isAdmin) {
     int choice;
     do {
         clearScreen();
+        border(default_border);
+        add_space(15);
+        printf("Inventory Management System\n");
+        border(default_border);
+        printf("Current User: %s (Role: %s)\n", currentUser.username, currentUser.role);
+        border(default_border);
         printf("\n=== Category and Supplier Management ===\n");
         printf("1. Add Category/Supplier\n");
         printf("2. Update Category/Supplier\n");
         printf("3. Delete Category/Supplier\n");
         printf("4. View Categories/Suppliers\n");
-        printf("5. Return to Main Menu\n");
+        if (isAdmin) {
+            printf("5. Return to Main Menu\n");
+        } else {
+            printf("5. Logout\n");
+            printf("6. Exit\n");
+        }
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -156,6 +199,12 @@ void role3Menu() {
                 break;
             case 5:
                 return;
+            case 6:
+                if (!isAdmin) {
+                    printf("\nThank you for using the system. Goodbye!\n");
+                    exit(0);
+                }
+                break;
             default:
                 printf("\nInvalid choice! Please try again.\n");
                 system("pause");
@@ -164,16 +213,27 @@ void role3Menu() {
 }
 
 // Role 4 Menu - User and Transaction Management (This is just a placeholder)
-void role4Menu() {
+void role4Menu(int isAdmin) {
     int choice;
     do {
         clearScreen();
+        border(default_border);
+        add_space(15);
+        printf("Inventory Management System\n");
+        border(default_border);
+        printf("Current User: %s (Role: %s)\n", currentUser.username, currentUser.role);
+        border(default_border);
         printf("\n=== User and Transaction Management ===\n");
         printf("1. Add User/Transaction\n");
         printf("2. Update User/Transaction\n");
         printf("3. Delete User/Transaction\n");
         printf("4. View Users/Transactions\n");
-        printf("5. Return to Main Menu\n");
+        if (isAdmin) {
+            printf("5. Return to Main Menu\n");
+        } else {
+            printf("5. Logout\n");
+            printf("6. Exit\n");
+        }
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -196,13 +256,18 @@ void role4Menu() {
                 break;
             case 5:
                 return;
+            case 6:
+                if (!isAdmin) {
+                    printf("\nThank you for using the system. Goodbye!\n");
+                    exit(0);
+                }
+                break;
             default:
                 printf("\nInvalid choice! Please try again.\n");
                 system("pause");
         }
     } while (1);
 }
-
 
 // Main Menu
 void displayMainMenu() {
@@ -214,54 +279,59 @@ void displayMainMenu() {
         printf("Inventory Management System\n");
         border(default_border);
         printf("Current User: %s (Role: %s)\n", currentUser.username, currentUser.role);
-        printf("1. Core System and Product Management\n");
-        printf("2. Inventory and Stock Management\n");
-        printf("3. Category and Supplier Management\n");
-        printf("4. User and Transaction Management\n");
-        printf("5. Administrator Menu\n");
-        printf("6. Logout\n");
-        printf("7. Exit\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
+        
+        if (strcmp(currentUser.role, "administrator") == 0) {
+            // Administrator sees all options
+            printf("1. Core System and Product Management\n");
+            printf("2. Inventory and Stock Management\n");
+            printf("3. Category and Supplier Management\n");
+            printf("4. User and Transaction Management\n");
+            printf("5. Administrator Menu\n");
+            printf("6. Logout\n");
+            printf("7. Exit\n");
+            
+            printf("Enter your choice: ");
+            scanf("%d", &choice);
 
-        switch (choice) {
-            case 1:
-                if (strcmp(currentUser.role, "role1") == 0 || strcmp(currentUser.role, "administrator") == 0)
-                    role1Menu();
-                else
-                    printf("\nAccess denied! You don't have permission for this role.\n");
-                break;
-            case 2:
-                if (strcmp(currentUser.role, "role2") == 0 || strcmp(currentUser.role, "administrator") == 0)
-                    role2Menu();
-                else
-                    printf("\nAccess denied! You don't have permission for this role.\n");
-                break;
-            case 3:
-                if (strcmp(currentUser.role, "role3") == 0 || strcmp(currentUser.role, "administrator") == 0)
-                    role3Menu();
-                else
-                    printf("\nAccess denied! You don't have permission for this role.\n");
-                break;
-            case 4:
-                if (strcmp(currentUser.role, "role4") == 0 || strcmp(currentUser.role, "administrator") == 0)
-                    role4Menu();
-                else
-                    printf("\nAccess denied! You don't have permission for this role.\n");
-                break;
-            case 5:
-                if (strcmp(currentUser.role, "administrator") == 0)
+            switch (choice) {
+                case 1:
+                    role1Menu(1);  // Pass 1 for admin
+                    break;
+                case 2:
+                    role2Menu(1);  // Pass 1 for admin
+                    break;
+                case 3:
+                    role3Menu(1);  // Pass 1 for admin
+                    break;
+                case 4:
+                    role4Menu(1);  // Pass 1 for admin
+                    break;
+                case 5:
                     adminMenu();
-                else
-                    printf("\nAccess denied! Administrator privileges required.\n");
-                break;
-            case 6:
+                    break;
+                case 6:
+                    return;
+                case 7:
+                    printf("\nThank you for using the system. Goodbye!\n");
+                    exit(0);
+                default:
+                    printf("\nInvalid choice! Please try again.\n");
+            }
+        } else {
+            // For other roles, show their specific menu
+            if (strcmp(currentUser.role, "product_manager") == 0) {
+                role1Menu(0);  // Pass 0 for non-admin
                 return;
-            case 7:
-                printf("\nThank you for using the system. Goodbye!\n");
-                exit(0);
-            default:
-                printf("\nInvalid choice! Please try again.\n");
+            } else if (strcmp(currentUser.role, "inventory_manager") == 0) {
+                role2Menu(0);  // Pass 0 for non-admin
+                return;
+            } else if (strcmp(currentUser.role, "supplier_manager") == 0) {
+                role3Menu(0);  // Pass 0 for non-admin
+                return;
+            } else if (strcmp(currentUser.role, "transaction_manager") == 0) {
+                role4Menu(0);  // Pass 0 for non-admin
+                return;
+            }
         }
         system("pause");
     } while (1);

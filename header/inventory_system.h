@@ -14,7 +14,7 @@ typedef struct {
     char username[50];
     char password[50];
     char role[20];
-} User;
+} Staff;
 
 typedef struct {
     char name[100];
@@ -25,9 +25,9 @@ typedef struct {
 } Product;
 
 // For Global Variables Declaration
-extern User users[MAX_USERS];
+extern Staff users[MAX_USERS];
 extern int userCount;
-extern User currentUser;
+extern Staff currentUser;
 
 // Functions
 void loadUsers();
@@ -37,10 +37,10 @@ void addUser();
 void deleteUser();
 
 void displayMainMenu();
-void role1Menu();
-void role2Menu();
-void role3Menu();
-void role4Menu();
+void role1Menu(int isAdmin);
+void role2Menu(int isAdmin);
+void role3Menu(int isAdmin);
+void role4Menu(int isAdmin);
 void adminMenu();
 
 void clearScreen();
