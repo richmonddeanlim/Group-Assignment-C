@@ -7,6 +7,7 @@
 #include "header/inventory_system.h"
 #include "function/decoration.c"
 
+
 extern User users[MAX_USERS];
 extern int userCount;
 extern User currentUser;
