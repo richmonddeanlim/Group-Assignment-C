@@ -243,10 +243,6 @@ int add_record()
             strncpy(product_id[i],data[i][0],99); 
         }
 
-        for(int i = 0; i < line; i++)
-        {
-            printf("%s", product_id[i]);
-        }
 
 
         if(array_len == 5)
