@@ -1,22 +1,18 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <windows.h>
 #include "../header/inventory_system.h"
 
 // File path constant
-const char* credentials = "database/user_credentials.txt";
+const char* credentials = "database/staff_credentials.txt";
 
 // Global variables
-User users[MAX_USERS];
+Staff users[MAX_USERS];
 int userCount = 0;
-User currentUser;
+Staff currentUser;
 
 // Load users from file
 void loadUsers() {
     FILE *file = fopen(credentials, "r");
     if (file == NULL) {
-        printf("Error opening user credentials file!\n");
+        printf("Error opening staff credentials file!\n");
         exit(1);
     }
 
@@ -47,13 +43,13 @@ void clearScreen() {
 // Add new user function
 void addUser() {
     if (userCount >= MAX_USERS) {
-        printf("\nMaximum number of users reached!\n");
+        printf("\nMaximum number of staff members reached!\n");
         system("pause");
         return;
     }
 
-    User newUser;
-    printf("\n=== Add New User ===\n");
+    Staff newUser;
+    printf("\n=== Add New Staff Member ===\n");
     printf("Enter username: ");
     scanf("%s", newUser.username);
     
@@ -68,16 +64,49 @@ void addUser() {
 
     printf("Enter password: ");
     scanf("%s", newUser.password);
-    printf("Enter role (admin/role1/role2/role3/role4): ");
-    scanf("%s", newUser.role);
+    
+    // Display role selection menu
+    printf("\n=== Role Selection ===\n");
+    printf("1. Administrator\n");
+    printf("2. Product Manager\n");
+    printf("3. Inventory Manager\n");
+    printf("4. Supplier Manager\n");
+    printf("5. Transaction Manager\n");
+    printf("\nEnter role number (1-5) or type the role name: ");
+    
+    char roleInput[50];
+    scanf("%s", roleInput);
+    
+    // Convert number input to role name if needed
+    if (strlen(roleInput) == 1 && roleInput[0] >= '1' && roleInput[0] <= '5') {
+        switch (roleInput[0]) {
+            case '1':
+                strcpy(newUser.role, "administrator");
+                break;
+            case '2':
+                strcpy(newUser.role, "product_manager");
+                break;
+            case '3':
+                strcpy(newUser.role, "inventory_manager");
+                break;
+            case '4':
+                strcpy(newUser.role, "supplier_manager");
+                break;
+            case '5':
+                strcpy(newUser.role, "transaction_manager");
+                break;
+        }
+    } else {
+        strcpy(newUser.role, roleInput);
+    }
 
     // Validate role
-    if (strcmp(newUser.role, "admin") != 0 && 
-        strcmp(newUser.role, "role1") != 0 && 
-        strcmp(newUser.role, "role2") != 0 && 
-        strcmp(newUser.role, "role3") != 0 && 
-        strcmp(newUser.role, "role4") != 0) {
-        printf("\nInvalid role! User not added.\n");
+    if (strcmp(newUser.role, "administrator") != 0 && 
+        strcmp(newUser.role, "product_manager") != 0 && 
+        strcmp(newUser.role, "inventory_manager") != 0 && 
+        strcmp(newUser.role, "supplier_manager") != 0 && 
+        strcmp(newUser.role, "transaction_manager") != 0) {
+        printf("\nInvalid role! Staff member not added.\n");
         system("pause");
         return;
     }
@@ -89,21 +118,21 @@ void addUser() {
     // Save to file
     FILE *file = fopen(credentials, "a");
     if (file == NULL) {
-        printf("\nError saving user to file!\n");
+        printf("\nError saving staff member to file!\n");
         system("pause");
         return;
     }
     fprintf(file, "%s,%s,%s\n", newUser.username, newUser.password, newUser.role);
     fclose(file);
 
-    printf("\nUser added successfully!\n");
+    printf("\nStaff member added successfully!\n");
     system("pause");
 }
 
 // Delete user function
 void deleteUser() {
     char username[50];
-    printf("\n=== Delete User ===\n");
+    printf("\n=== Delete Staff Member ===\n");
     printf("Enter username to delete: ");
     scanf("%s", username);
 
@@ -117,16 +146,16 @@ void deleteUser() {
     }
 
     if (userIndex == -1) {
-        printf("\nUser not found!\n");
+        printf("\nStaff member not found!\n");
         system("pause");
         return;
     }
 
     // Don't allow deleting the last admin
-    if (strcmp(users[userIndex].role, "admin") == 0) {
+    if (strcmp(users[userIndex].role, "administrator") == 0) {
         int adminCount = 0;
         for (int i = 0; i < userCount; i++) {
-            if (strcmp(users[i].role, "admin") == 0) {
+            if (strcmp(users[i].role, "administrator") == 0) {
                 adminCount++;
             }
         }
@@ -146,7 +175,7 @@ void deleteUser() {
     // Update file
     FILE *file = fopen(credentials, "w");
     if (file == NULL) {
-        printf("\nError updating user file!\n");
+        printf("\nError updating staff file!\n");
         system("pause");
         return;
     }
@@ -155,7 +184,7 @@ void deleteUser() {
     }
     fclose(file);
 
-    printf("\nUser deleted successfully!\n");
+    printf("\nStaff member deleted successfully!\n");
     system("pause");
 }
 
@@ -165,10 +194,10 @@ void adminMenu() {
     do {
         clearScreen();
         printf("\n=== Administrator Menu ===\n");
-        printf("1. Add New User\n");
-        printf("2. Delete User\n");
-        printf("3. Change User Password\n");
-        printf("4. View All Users\n");
+        printf("1. Add New Staff Member\n");
+        printf("2. Delete Staff Member\n");
+        printf("3. Change Staff Password\n");
+        printf("4. View All Staff Members\n");
         printf("5. Return to Main Menu\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
@@ -184,10 +213,15 @@ void adminMenu() {
                 changePassword();
                 break;
             case 4:
-                printf("\n=== All Users ===\n");
+                printf("\n=== All Staff Members ===\n");
+                printf("+------------------+---------------------+\n");
+                printf("| %-16s | %-19s |\n", "Username", "Role");
+                printf("+------------------+---------------------+\n");
                 for (int i = 0; i < userCount; i++) {
-                    printf("Username: %s, Role: %s\n", users[i].username, users[i].role);
+                    printf("| %-16s | %-19s |\n", users[i].username, users[i].role);
                 }
+                printf("+------------------+---------------------+\n");
+                printf("\nTotal Staff Members: %d\n", userCount);
                 system("pause");
                 break;
             case 5:
@@ -231,7 +265,7 @@ void changePassword() {
     }
 
     if (!found) {
-        printf("User not found!\n");
+        printf("Staff member not found!\n");
     }
     system("pause");
 }
