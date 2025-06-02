@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <windows.h>
 
 #define MAX_LINE_LENGTH 256
 #define MAX_USERS 100
