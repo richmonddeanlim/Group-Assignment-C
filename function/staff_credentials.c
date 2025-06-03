@@ -4,9 +4,30 @@
 const char* credentials = "database/staff_credentials.txt";
 
 // Global variables
-Staff users[MAX_USERS];
+Staff users[Max_users];
 int userCount = 0;
 Staff currentUser;
+
+// Function to get valid input with validation
+void getValidInput(char* prompt, char* buffer, int maxLength) {
+    do {
+        printf("%s", prompt);
+        fgets(buffer, maxLength, stdin);
+        buffer[strcspn(buffer, "\n")] = 0;  // Remove newline
+        
+        if (strlen(buffer) == 0) {
+            printf("\nInput cannot be empty! Please try again.\n");
+            continue;
+        }
+        break;
+    } while (1);
+}
+
+// Implementation of clearInputBuffer
+void clearInputBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
 
 // Load users from file
 void loadUsers() {
@@ -19,7 +40,7 @@ void loadUsers() {
     char line[MAX_LINE_LENGTH];
     userCount = 0;
 
-    while (fgets(line, sizeof(line), file) && userCount < MAX_USERS) {
+    while (fgets(line, sizeof(line), file) && userCount < Max_users) {
         char *token = strtok(line, ",");
         strcpy(users[userCount].username, token);
         
@@ -42,7 +63,7 @@ void clearScreen() {
 
 // Add new user function
 void addUser() {
-    if (userCount >= MAX_USERS) {
+    if (userCount >= Max_users) {
         printf("\nMaximum number of staff members reached!\n");
         system("pause");
         return;
@@ -50,20 +71,26 @@ void addUser() {
 
     Staff newUser;
     printf("\n=== Add New Staff Member ===\n");
-    printf("Enter username: ");
-    scanf("%s", newUser.username);
     
-    // Check if username already exists
-    for (int i = 0; i < userCount; i++) {
-        if (strcmp(users[i].username, newUser.username) == 0) {
-            printf("\nUsername already exists!\n");
-            system("pause");
-            return;
+    // Get username with validation
+    do {
+        getValidInput("Enter username: ", newUser.username, sizeof(newUser.username));
+        
+        // Check if username already exists
+        int exists = 0;
+        for (int i = 0; i < userCount; i++) {
+            if (strcmp(users[i].username, newUser.username) == 0) {
+                printf("\nUsername already exists!\n");
+                exists = 1;
+                break;
+            }
         }
-    }
+        if (exists) continue;
+        break;
+    } while (1);
 
-    printf("Enter password: ");
-    scanf("%s", newUser.password);
+    // Get password with validation
+    getValidInput("Enter password: ", newUser.password, sizeof(newUser.password));
     
     // Display role selection menu
     printf("\n=== Role Selection ===\n");
@@ -75,7 +102,7 @@ void addUser() {
     printf("\nEnter role number (1-5) or type the role name: ");
     
     char roleInput[50];
-    scanf("%s", roleInput);
+    getValidInput("", roleInput, sizeof(roleInput));
     
     // Convert number input to role name if needed
     if (strlen(roleInput) == 1 && roleInput[0] >= '1' && roleInput[0] <= '5') {
@@ -133,8 +160,9 @@ void addUser() {
 void deleteUser() {
     char username[50];
     printf("\n=== Delete Staff Member ===\n");
-    printf("Enter username to delete: ");
-    scanf("%s", username);
+    
+    // Get username with validation
+    getValidInput("Enter username to delete: ", username, sizeof(username));
 
     // Find user
     int userIndex = -1;
@@ -200,7 +228,13 @@ void adminMenu() {
         printf("4. View All Staff Members\n");
         printf("5. Return to Main Menu\n");
         printf("Enter your choice: ");
-        scanf("%d", &choice);
+        if (scanf("%d", &choice) != 1) {
+            clearInputBuffer();
+            printf("\nInvalid choice! Please enter a number.\n");
+            system("pause");
+            continue;
+        }
+        clearInputBuffer();
 
         switch (choice) {
             case 1:
@@ -239,33 +273,44 @@ void changePassword() {
     char newPassword[50];
     int found = 0;
 
-    printf("\nEnter username to change password: ");
-    scanf("%s", username);
-
-    for (int i = 0; i < userCount; i++) {
-        if (strcmp(users[i].username, username) == 0) {
-            printf("Enter new password: ");
-            scanf("%s", newPassword);
-            strcpy(users[i].password, newPassword);
-            found = 1;
-
-            // Update the file
-            FILE *file = fopen(credentials, "w");
-            if (file != NULL) {
-                for (int j = 0; j < userCount; j++) {
-                    fprintf(file, "%s,%s,%s\n", users[j].username, users[j].password, users[j].role);
-                }
-                fclose(file);
-                printf("Password updated successfully!\n");
-            } else {
-                printf("Error updating password in file!\n");
-            }
-            break;
+    do {
+        printf("\nEnter username to change password: ");
+        fgets(username, sizeof(username), stdin);
+        username[strcspn(username, "\n")] = 0;  // Remove newline
+        
+        if (strlen(username) == 0) {
+            printf("\nInput cannot be empty! Please try again.\n");
+            continue;
         }
-    }
 
-    if (!found) {
-        printf("Staff member not found!\n");
-    }
+        // Check if user exists
+        for (int i = 0; i < userCount; i++) {
+            if (strcmp(users[i].username, username) == 0) {
+                getValidInput("Enter new password: ", newPassword, sizeof(newPassword));
+                strcpy(users[i].password, newPassword);
+                found = 1;
+
+                // Update the file
+                FILE *file = fopen(credentials, "w");
+                if (file != NULL) {
+                    for (int j = 0; j < userCount; j++) {
+                        fprintf(file, "%s,%s,%s\n", users[j].username, users[j].password, users[j].role);
+                    }
+                    fclose(file);
+                    printf("Password updated successfully!\n");
+                } else {
+                    printf("Error updating password in file!\n");
+                }
+                break;
+            }
+        }
+
+        if (!found) {
+            printf("Staff member not found! Please try again.\n");
+            continue;
+        }
+        break;
+    } while (1);
+
     system("pause");
 }
