@@ -5,8 +5,10 @@
 #include "../header/decoration.h"
 #include "decoration.c"
 
+FILE *file_product;
+FILE *file_record;
 char product_location[] = "../database/product.txt";
-char record_lcoation[] = "../database/inventory_record.txt";
+char record_location[] = "../database/inventory_record.txt";
 
 // data structure for the inventory_record
 struct inventory_record
@@ -102,11 +104,8 @@ int menu()
 }
 
 // function adding new record for inventory
-int add_record()
+int add_record()               
 {
-    FILE *file_product;
-    FILE *file_record;
-
     // File location
     struct inventory_record record;
     char ch;
@@ -191,10 +190,10 @@ int add_record()
                 if(record.date[2] == '-' && record.date[5] == '-')
                 {
                     // ensure the date not above 31
-                    if( (int) (((record.date[0] - '0') * 10) + record.date[1] - '0') < 31) // subtract with '0' will return the int value (converting ascii to int)
+                    if( (int) (((record.date[0] - '0') * 10) + record.date[1] - '0') <= 31) // subtract with '0' will return the int value (converting ascii to int)
                     {
                         // ensure the month not above 12
-                        if((int) (((record.date[3] - '0') * 10) + record.date[4] - '0') < 12)
+                        if((int) (((record.date[3] - '0') * 10) + record.date[4] - '0') <= 12)
                         {
                             while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input     
                             break;
@@ -202,7 +201,7 @@ int add_record()
                         
                         else
                         {
-                            printf("The monnth is more than 31, pls stry again\n");
+                            printf("The monnth is more than 12, pls stry again\n");
                             while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input     
                         }
                     }
@@ -277,7 +276,6 @@ int add_record()
             {
                 break;
             }
-            
         }
         
         else
@@ -290,15 +288,43 @@ int add_record()
         // getting the quantity
         integer_valdiation("Enter the quantity: ", &record.quantity);
 
+        // openning the file
+        file_record = fopen(record_location,"a");
+
+        // check the file is there or not
+        if(file_record == NULL)
+        {
+            printf("Error openning the file\n");
+            return 1;
+        }
+
+        // write the record into the text file
+        fprintf(file_record, "%s,%s,%d\n", record.date, record.product_id, record.quantity);
+
+        // close the txt file
+        fclose(file_record);
+
+        // asking the user still want to continue or not
         printf("Do you still want to contiinue (y/n): ");
         scanf("%c", &again);
     }
     
 }
 
+// update stock level
+void update_stock()
+{
+    int value;
+    
+    
+}
+
+
 int main()
 {
     // menu();
     add_record();
     return 0;
+
+    //test a
 }   

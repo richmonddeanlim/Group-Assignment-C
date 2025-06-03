@@ -4,17 +4,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <windows.h>
 
 #define MAX_LINE_LENGTH 256
-#define MAX_USERS 100
+#define Max_users 100
 
 // Data Structures
 typedef struct {
     char username[50];
     char password[50];
     char role[20];
-} User;
+} Staff;
 
 typedef struct {
     char name[100];
@@ -25,9 +24,9 @@ typedef struct {
 } Product;
 
 // For Global Variables Declaration
-extern User users[MAX_USERS];
+extern Staff users[Max_users];
 extern int userCount;
-extern User currentUser;
+extern Staff currentUser;
 
 // Functions
 void loadUsers();
@@ -35,14 +34,16 @@ int login();
 void changePassword();
 void addUser();
 void deleteUser();
+void getValidInput(char* prompt, char* buffer, int maxLength);
 
 void displayMainMenu();
-void role1Menu();
-void role2Menu();
-void role3Menu();
-void role4Menu();
+void role1Menu(int isAdmin);
+void role2Menu(int isAdmin);
+void role3Menu(int isAdmin);
+void role4Menu(int isAdmin);
 void adminMenu();
 
 void clearScreen();
+void clearInputBuffer();
 
 #endif
