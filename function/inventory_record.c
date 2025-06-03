@@ -5,6 +5,8 @@
 #include "../header/decoration.h"
 #include "decoration.c"
 
+FILE *file_product;
+FILE *file_record;
 char product_location[] = "../database/product.txt";
 char record_location[] = "../database/inventory_record.txt";
 
@@ -102,11 +104,8 @@ int menu()
 }
 
 // function adding new record for inventory
-int add_record()
+int add_record()               
 {
-    FILE *file_product;
-    FILE *file_record;
-
     // File location
     struct inventory_record record;
     char ch;
@@ -304,6 +303,7 @@ int add_record()
         // close the txt file
         fclose(file_record);
 
+        // asking the user still want to continue or not
         printf("Do you still want to contiinue (y/n): ");
         scanf("%c", &condition);
 
@@ -311,6 +311,15 @@ int add_record()
     }
     
 }
+
+// update stock level
+void update_stock()
+{
+    int value;
+    
+    
+}
+
 
 int main()
 {
