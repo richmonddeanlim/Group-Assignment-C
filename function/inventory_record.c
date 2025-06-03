@@ -111,6 +111,7 @@ int add_record()
     struct inventory_record record;
     char ch;
     char condition;
+    char again;
 
     // open the product.txt
     file_product = fopen(product_location,"r");
@@ -169,7 +170,7 @@ int add_record()
         strncpy(product_id[i],data[i][0],99); 
     }
             
-    while(condition == 'y' || condition == 'Y')
+    while(again == 'y' || again == 'Y')
     {
 
         // getting date input
@@ -290,7 +291,7 @@ int add_record()
         integer_valdiation("Enter the quantity: ", &record.quantity);
 
         printf("Do you still want to contiinue (y/n): ");
-        scanf("%c", &condition);
+        scanf("%c", &again);
     }
     
 }
