@@ -1,12 +1,12 @@
-//Run With gcc main.c function/staff_credentials.c -o program (This if you run from main.c)
-//Run with gcc Group-Assignment-C-main/main.c Group-Assignment-C-main/function/staff_credentials.c -o Group-Assignment-C-main/program (This if you run from Group-Assignment-C-main)
+// First do cd Group-Assignment-C-main in the terminal
+// Run With gcc main.c function/staff_credentials.c -o program
+// Run With ./program
 
 
 #include "header/inventory_system.h"
 #include "function/decoration.c"
 
-
-extern Staff users[MAX_USERS];
+extern Staff users[Max_users];
 extern int userCount;
 extern Staff currentUser;
 
@@ -16,12 +16,14 @@ int login() {
     int attempts = 3;
 
     while (attempts > 0) {
+        clearScreen();
         printf("\n=== Login System ===\n");
-        printf("Username: ");
-        scanf("%49s", username);
-        printf("Password: ");
-        scanf("%s", password);
+        
+        // Get username and password using getValidInput
+        getValidInput("Username: ", username, sizeof(username));
+        getValidInput("Password: ", password, sizeof(password));
 
+        // Check credentials
         for (int i = 0; i < userCount; i++) {
             if (strcmp(users[i].username, username) == 0 && 
                 strcmp(users[i].password, password) == 0) {
@@ -34,6 +36,7 @@ int login() {
 
         attempts--;
         printf("\nInvalid credentials! %d attempts remaining.\n", attempts);
+        system("pause");
     }
 
     return 0;
@@ -44,6 +47,7 @@ int login() {
 // Role 1 Menu - Core System and Product Management (This is just a placeholder)
 void role1Menu(int isAdmin) {
     int choice;
+    char choiceStr[10];
     do {
         clearScreen();
         border(default_border);
@@ -63,8 +67,9 @@ void role1Menu(int isAdmin) {
             printf("5. Logout\n");
             printf("6. Exit\n");
         }
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
+        
+        getValidInput("Enter your choice: ", choiceStr, sizeof(choiceStr));
+        choice = atoi(choiceStr);
 
         switch (choice) {
             case 1:
@@ -101,6 +106,7 @@ void role1Menu(int isAdmin) {
 // Role 2 Menu - Inventory and Stock Management (This is just a placeholder)
 void role2Menu(int isAdmin) {
     int choice;
+    char choiceStr[10];
     do {
         clearScreen();
         border(default_border);
@@ -120,8 +126,9 @@ void role2Menu(int isAdmin) {
             printf("5. Logout\n");
             printf("6. Exit\n");
         }
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
+        
+        getValidInput("Enter your choice: ", choiceStr, sizeof(choiceStr));
+        choice = atoi(choiceStr);
 
         switch (choice) {
             case 1:
@@ -158,6 +165,7 @@ void role2Menu(int isAdmin) {
 // Role 3 Menu - Category and Supplier Management (This is just a placeholder)
 void role3Menu(int isAdmin) {
     int choice;
+    char choiceStr[10];
     do {
         clearScreen();
         border(default_border);
@@ -177,8 +185,9 @@ void role3Menu(int isAdmin) {
             printf("5. Logout\n");
             printf("6. Exit\n");
         }
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
+        
+        getValidInput("Enter your choice: ", choiceStr, sizeof(choiceStr));
+        choice = atoi(choiceStr);
 
         switch (choice) {
             case 1:
@@ -215,6 +224,7 @@ void role3Menu(int isAdmin) {
 // Role 4 Menu - User and Transaction Management (This is just a placeholder)
 void role4Menu(int isAdmin) {
     int choice;
+    char choiceStr[10];
     do {
         clearScreen();
         border(default_border);
@@ -234,8 +244,9 @@ void role4Menu(int isAdmin) {
             printf("5. Logout\n");
             printf("6. Exit\n");
         }
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
+        
+        getValidInput("Enter your choice: ", choiceStr, sizeof(choiceStr));
+        choice = atoi(choiceStr);
 
         switch (choice) {
             case 1:
@@ -272,6 +283,7 @@ void role4Menu(int isAdmin) {
 // Main Menu
 void displayMainMenu() {
     int choice;
+    char choiceStr[10];
     do {
         clearScreen();
         border(default_border);
@@ -290,8 +302,8 @@ void displayMainMenu() {
             printf("6. Logout\n");
             printf("7. Exit\n");
             
-            printf("Enter your choice: ");
-            scanf("%d", &choice);
+            getValidInput("Enter your choice: ", choiceStr, sizeof(choiceStr));
+            choice = atoi(choiceStr);
 
             switch (choice) {
                 case 1:
