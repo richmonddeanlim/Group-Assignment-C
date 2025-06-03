@@ -179,7 +179,7 @@ void add_record()
     struct inventory_record record;
     char ch;
     char condition;
-    char again = 'y';
+    char record_loop = 'y';
     int line = 0;
 
     // retrieving product data
@@ -193,7 +193,7 @@ void add_record()
         strncpy(product_id[i],product_data[i][0],99); 
     }
             
-    while(again == 'y' || again == 'Y')
+    while(record_loop == 'y' || record_loop == 'Y')
     {
 
         // getting date input
@@ -361,9 +361,8 @@ void add_record()
 
         // asking the user still want to continue or not
         printf("Do you still want to contiinue (y/n): ");
-        scanf("%c", &again);
+        scanf("%c", &record_loop);
     }
-    
 }
 
 // update stock level
