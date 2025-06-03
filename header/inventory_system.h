@@ -6,7 +6,7 @@
 #include <string.h>
 
 #define MAX_LINE_LENGTH 256
-#define MAX_USERS 100
+#define Max_users 100
 
 // Data Structures
 typedef struct {
@@ -24,7 +24,7 @@ typedef struct {
 } Product;
 
 // For Global Variables Declaration
-extern Staff users[MAX_USERS];
+extern Staff users[Max_users];
 extern int userCount;
 extern Staff currentUser;
 
@@ -34,6 +34,7 @@ int login();
 void changePassword();
 void addUser();
 void deleteUser();
+void getValidInput(char* prompt, char* buffer, int maxLength);
 
 void displayMainMenu();
 void role1Menu(int isAdmin);
@@ -43,5 +44,6 @@ void role4Menu(int isAdmin);
 void adminMenu();
 
 void clearScreen();
+void clearInputBuffer();
 
 #endif
