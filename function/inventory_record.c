@@ -371,12 +371,7 @@ void update_stock()
 {
     int line = 0;
     char record_data[100][100][100];
-    data_record(record_data,&line);
-    
-    
-    
-
-    
+    data_record(record_data,&line);    
 }
 
 int main()
