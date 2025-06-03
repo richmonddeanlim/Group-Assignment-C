@@ -15,8 +15,8 @@ struct inventory_record
 {
     char date[20];
     char product_id[100];
+    char action[50];
     int quantity;
-    char status[50];
 };
 
 // option validation function
@@ -103,70 +103,94 @@ int menu()
     return choice; 
 }
 
+// lowering
+void str_lower(char *str) {
+    for (int i = 0; str[i]; i++) {
+        str[i] = tolower(str[i]);
+    }
+}
+
+// retrieving data inside teh product txt
+void data_product(char data[100][100][100], int *line_array)
+{
+    FILE *file_product = fopen(product_location, "r");
+
+    if(file_product == NULL) {
+        printf("Error opening file.\n");
+        return;
+    }
+
+    char raw_product[100][100];
+    int line = 0;
+
+    while(fgets(raw_product[line], 100, file_product) != NULL) {
+        line++;
+    }
+
+    fclose(file_product);
+
+    for(int i = 0; i < line + 1; i++) {
+        char *token = strtok(raw_product[i], ",");
+        for(int j = 0; j < 5 && token != NULL; j++) {
+            strncpy(data[i][j], token, 99);
+            data[i][j][99] = '\0';
+            token = strtok(NULL, ",");
+        }
+    }
+
+    *line_array = line;
+}
+
+// retrieving data inside the data record
+void data_record(char data[100][100][100], int *line_array)
+{
+    FILE *file_record = fopen(record_location, "r");
+
+    if(file_product == NULL) {
+        printf("Error opening file.\n");
+        return;
+    }
+
+    char raw_record[100][100];
+    int line = 0;
+
+    while(fgets(raw_record[line], 100, file_record) != NULL) {
+        line++;
+    }
+
+    fclose(file_record);
+
+    for(int i = 0; i < line + 1; i++) {
+        char *token = strtok(raw_record[i], ",");
+        for(int j = 0; j < 5 && token != NULL; j++) {
+            strncpy(data[i][j], token, 99);
+            data[i][j][99] = '\0';
+            token = strtok(NULL, ",");
+        }
+    }
+
+    *line_array = line;
+}
+
 // function adding new record for inventory
-int add_record()               
+void add_record()               
 {
     // File location
     struct inventory_record record;
     char ch;
     char condition;
-    char again;
-
-    // open the product.txt
-    file_product = fopen(product_location,"r");
-    
-    if( file_product == NULL)
-    {
-        printf("Error opening file.\n");
-        return 1;
-    }
-    
+    char again = 'y';
     int line = 0;
-    char raw_product [100] [100];
-    
-    // take all line to the array until not end of file and not error
-    while(!feof(file_product) && !ferror(file_product))
-    {
-        // looping until the value null
-        if(fgets(raw_product[line],100, file_product) != NULL)
-        {
-            // count length of the line in the file
-            line += 1;
-        }
-    }
-    
-    // closing file
-    fclose(file_product);
-    
-    char data[100][100][100];
-    int len_data;
-    
-    // splitting , 
-    for(int i = 0; i <2;i++)
-    {
-        // Returns first token 
-        char *token = strtok(raw_product[i], ",");
-        
-        // Keep printing tokens while one of the
-        // delimiters present in str[].
-        while (token != NULL)
-        {
-            for(int j = 0; j < 5; j++)
-            {
-                // copy the splitted string adn insert i into data
-                strncpy(data[i][j], token, 99);
-                data[i][j][99] = '\0'; 
-                token = strtok(NULL, ",");
-            }
-        }
-        
-    }
+
+    // retrieving product data
+    char product_data[100][100][100];
+    data_product(product_data, &line);
     
     char product_id[100][100];
     // insert the data into product id
     for(int i=0; i < line ;i++)
     {
-        strncpy(product_id[i],data[i][0],99); 
+        strncpy(product_id[i],product_data[i][0],99); 
     }
             
     while(again == 'y' || again == 'Y')
@@ -189,11 +213,13 @@ int add_record()
             {
                 if(record.date[2] == '-' && record.date[5] == '-')
                 {
+                    int day = (int) (((record.date[0] - '0') * 10) + record.date[1] - '0'); 
                     // ensure the date not above 31
-                    if( (int) (((record.date[0] - '0') * 10) + record.date[1] - '0') <= 31) // subtract with '0' will return the int value (converting ascii to int)
+                    if( day <= 31 && day > 0) // subtract with '0' will return the int value (converting ascii to int)
                     {
+                        int month = (int) (((record.date[3] - '0') * 10) + record.date[4] - '0');
                         // ensure the month not above 12
-                        if((int) (((record.date[3] - '0') * 10) + record.date[4] - '0') <= 12)
+                        if( month <= 12 && month > 0)
                         {
                             while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input     
                             break;
@@ -284,7 +310,36 @@ int add_record()
             printf("Pls enter the right format\n");
         }
     }
-    
+
+        // getting the action from the user
+        while(1)
+        {
+             printf("Enter the action (restock/out/return): ");
+             scanf("%s", record.action);
+
+             str_lower(record.action);
+
+             printf("%s", record.action);
+             if(strcmp(record.action, "restock") ==  0)
+             {
+                strcpy(record.action, "Restock");
+                break;
+             }
+
+             else if(strcmp(record.action, "out") ==  0)
+             {
+                record.action == "Out";
+                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
+                break;
+             }
+
+             else
+             {
+                printf("Pls enter the available action only\n");
+                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
+             }
+             
+        }
         // getting the quantity
         integer_valdiation("Enter the quantity: ", &record.quantity);
 
@@ -295,11 +350,11 @@ int add_record()
         if(file_record == NULL)
         {
             printf("Error openning the file\n");
-            return 1;
+            return  ;
         }
 
         // write the record into the text file
-        fprintf(file_record, "%s,%s,%d\n", record.date, record.product_id, record.quantity);
+        fprintf(file_record, "%s,%s,%s,%d\n", record.date, record.product_id,record.action, record.quantity);
 
         // close the txt file
         fclose(file_record);
@@ -314,17 +369,23 @@ int add_record()
 // update stock level
 void update_stock()
 {
-    int value;
+    int line = 0;
+    char record_data[100][100][100];
+    data_record(record_data,&line);
     
+    
+    
+
     
 }
-
 
 int main()
 {
     // menu();
-    add_record();
-    return 0;
+    // add_record();
+    update_stock();
 
+    // printf("%s",data[1][1]);
+    return 0;
     //test a
 }   

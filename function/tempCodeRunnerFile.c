@@ -1,1 +1,1 @@
-ine - 1
+                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
