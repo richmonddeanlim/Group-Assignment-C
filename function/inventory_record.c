@@ -300,4 +300,6 @@ int main()
     // menu();
     add_record();
     return 0;
+
+    //test
 }   
