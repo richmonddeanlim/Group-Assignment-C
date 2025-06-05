@@ -14,7 +14,7 @@ char record_location[] = "../database/inventory_record.txt";
 struct inventory_record
 {
     char date[20];
-    char product_id[100];
+    char product_id[50];
     char action[50];
     int quantity;
 };
@@ -80,29 +80,6 @@ void arr_len(char array[], int *array_len)
     }
 }
 
-// inventory record management menu
-int menu()
-{
-   // giving menu interface for user
-    border(default_border);
-    add_space(15);
-    printf("Iventory and Stock management\n");
-    border(default_border);
-    printf("1. Add stock inventory record\n");
-    printf("2. Update stock level\n");
-    printf("3. Delete Discontinued Stock\n");
-    printf("4. View Current Invetory\n");
-    printf("5. Exit\n");
-    border(default_border);
-    
-    // geting user choices
-    int choice;
-    option_validation("Enter your choice: ",&choice,5);
-    printf("%d", choice);
-
-    return choice; 
-}
-
 // lowering
 void str_lower(char *str) {
     for (int i = 0; str[i]; i++) {
@@ -146,7 +123,7 @@ void data_record(char data[100][100][100], int *line_array)
 {
     FILE *file_record = fopen(record_location, "r");
 
-    if(file_product == NULL) {
+    if(file_record == NULL) {
         printf("Error opening file.\n");
         return;
     }
@@ -170,6 +147,29 @@ void data_record(char data[100][100][100], int *line_array)
     }
 
     *line_array = line;
+}
+
+// inventory record management menu
+int menu()
+{
+   // giving menu interface for user
+    border(default_border);
+    add_space(15);
+    printf("Iventory and Stock management\n");
+    border(default_border);
+    printf("1. Add stock inventory record\n");
+    printf("2. Update stock level\n");
+    printf("3. Delete Discontinued Stock\n");
+    printf("4. View Current Invetory\n");
+    printf("5. Exit\n");
+    border(default_border);
+    
+    // geting user choices
+    int choice;
+    option_validation("Enter your choice: ",&choice,5);
+    printf("%d", choice);
+
+    return choice; 
 }
 
 // function adding new record for inventory
@@ -264,52 +264,52 @@ void add_record()
     
         // getting product id input
         while(1)
-    {
-        int array_len = 0;
-        
-        //getting user input
-        printf("Enter the product id (Axxx): ");
-        scanf("%s", &record.product_id);
-        
-        // getting arr len for valdiation
-        arr_len(record.product_id, &array_len);
-        
-        if(array_len == 4)
         {
+            int array_len = 0;
             
-            // checking the product id inside the product.txt
-            char *condition = "False";
-            for(int i = 0; i < line; i++)
+            //getting user input
+            printf("Enter the product id (Axxx): ");
+            scanf("%s", &record.product_id);
+            
+            // getting arr len for valdiation
+            arr_len(record.product_id, &array_len);
+            
+            if(array_len == 4)
             {
-                // return the true when it same
-                if(strcmp(record.product_id, product_id[i]) == 0)
+                
+                // checking the product id inside the product.txt
+                char *condition = "False";
+                for(int i = 0; i < line; i++)
                 {
-                    condition = "True";
-                    while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
-                    break;
+                    // return the true when it same
+                    if(strcmp(record.product_id, product_id[i]) == 0)
+                    {
+                        condition = "True";
+                        while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
+                        break;
+                    }
+                    
+                    // give error message when the product id not registered
+                    else if(i == line - 1 && strcmp(record.product_id, product_id[i]) != 0)
+                    {
+                        condition = "False";
+                        printf("The product haven't addded yet, the product id not in the product.txt\n");
+                    }
                 }
                 
-                // give error message when the product id not registered
-                else if(i == line - 1 && strcmp(record.product_id, product_id[i]) != 0)
+                // break if the condition is true
+                if(condition == "True")
                 {
-                    condition = "False";
-                    printf("The product haven't addded yet, the product id not in the product.txt\n");
+                    break;
                 }
             }
             
-            // break if the condition is true
-            if(condition == "True")
+            else
             {
-                break;
+                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
+                printf("Pls enter the right format\n");
             }
         }
-        
-        else
-        {
-            while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
-            printf("Pls enter the right format\n");
-        }
-    }
 
         // getting the action from the user
         while(1)
@@ -319,7 +319,6 @@ void add_record()
 
              str_lower(record.action);
 
-             printf("%s", record.action);
              if(strcmp(record.action, "restock") ==  0)
              {
                 strcpy(record.action, "Restock");
@@ -328,8 +327,13 @@ void add_record()
 
              else if(strcmp(record.action, "out") ==  0)
              {
-                record.action == "Out";
-                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
+                strcpy(record.action, "Out");
+                break;
+             }
+             
+             else if(strcmp(record.action, "return") ==  0)
+             {
+                strcpy(record.action, "Return");
                 break;
              }
 
@@ -365,20 +369,152 @@ void add_record()
     }
 }
 
+// view rrecord
+void view_record()
+{
+    char record_data[100][100][100];
+    int len_record = 0;
+    data_record(record_data,&len_record);  
+    
+    // First count unique products
+    int unique_count = 0;
+    char unique_product[100][100]; 
+    
+    // finding the unique value
+    for(int j = 1; j < len_record; j++)  // Start from 1 to skip header
+    {
+        // Skip empty product IDs
+        if(strlen(record_data[j][1]) == 0 || record_data[j][1][0] == '\0') 
+        {
+            continue;
+        }
+
+        int is_duplicate = 0;
+        // Check if this product ID is already in our unique list
+        for(int k = 0; k < unique_count; k++)
+        {
+            if(strcmp(record_data[j][1], unique_product[k]) == 0)
+            {
+                is_duplicate = 1;
+                break;
+            }
+        }
+        
+        // If not a duplicate, add to unique list
+        if(!is_duplicate)
+        {
+            strcpy(unique_product[unique_count], record_data[j][1]);
+            unique_count++;
+        }
+    }
+    
+ 
+    struct inventory_record data[100]; 
+    
+    // loop through data and count the quantity
+    for(int i = 0; i < unique_count; i++)  
+    {
+        int total = 0;  // Reset total for each product
+        strcpy(data[i].product_id, unique_product[i]);
+        
+        for(int j = 1; j < len_record; j++)
+        {
+            // check on id the user input then count the quantity
+            if(strcmp(record_data[j][1], unique_product[i]) == 0)
+            {
+                int quantity = atoi(record_data[j][3]);
+                if(strcmp(record_data[j][2], "Restock") == 0 || strcmp(record_data[j][2], "Return") == 0)
+                {
+                    total += quantity;
+                }
+                else if(strcmp(record_data[j][2], "Out") == 0)
+                {
+                    total -= quantity;                
+                }
+            }
+        }
+        printf("%s", unique_product[i]);
+        data[i].quantity = total;  // Store the total after calculation
+        printf("Product ID: %s, Current Stock: %d\n", data[i].product_id, data[i].quantity);
+    }
+}
+
+
+
 // update stock level
 void update_stock()
 {
-    int line = 0;
-    char record_data[100][100][100];
-    data_record(record_data,&line);    
+    struct inventory_record record;
+
+    char ch;
+    int len_product = 0;
+    char product_data[100][100][100];
+    char product_id[100][100];
+    
+    // retirieve product_id form the product.txt
+    data_product(product_data, &len_product);
+    for(int i=0; i < len_product ;i++)
+
+    {
+        strncpy(product_id[i],product_data[i][0],99); 
+    }
+
+    // getting product id input
+    while(1)
+    {
+        int array_len = 0;
+
+        //getting user input
+        printf("Enter the product id (Axxx): ");
+        scanf("%s", record.product_id);
+        
+        // getting arr len for valdiation
+        arr_len(record.product_id, &array_len);
+        
+        if(array_len == 4)
+        {
+            // checking the product id inside the product.txt
+            char *condition = "False";
+            for(int i = 0; i < len_product; i++)
+            {
+                // return the true when it same
+                if(strcmp(record.product_id, product_id[i]) == 0)
+                {
+                    condition = "True";
+                    while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
+                    break;
+                }
+                
+                // give error message when the product id not registered
+                else if(i == len_product - 1 && strcmp(record.product_id, product_id[i]) != 0)
+                {
+                    condition = "False";
+                    printf("The product haven't addded yet, the product id not in the product.txt\n");
+                }
+            }
+            
+            // break if the condition is true
+            if(condition == "True")
+            {
+                break;
+            }
+        }
+        
+        else
+        {
+            while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
+            printf("Pls enter the right format\n");
+        }
+    }
+
 }
 
 int main()
 {
     // menu();
     // add_record();
-    update_stock();
-
+    // update_stock();
+    view_record();
     // printf("%s",data[1][1]);
     return 0;
     //test a
