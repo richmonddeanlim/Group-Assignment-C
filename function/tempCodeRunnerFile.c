@@ -1,2 +1,1 @@
-
-    char action[50];
+30

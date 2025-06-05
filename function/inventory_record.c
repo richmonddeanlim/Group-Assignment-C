@@ -2,7 +2,6 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../header/decoration.h"
 #include "decoration.c"
 
 FILE *file_product;
@@ -17,6 +16,14 @@ struct inventory_record
     char product_id[50];
     char action[50];
     int quantity;
+};
+
+struct inventory_item
+{
+    char product_id[50];
+    char product_name[50];
+    int quantity;
+    char stock_status[50];
 };
 
 // option validation function
@@ -408,8 +415,7 @@ void view_record()
         }
     }
     
- 
-    struct inventory_record data[100]; 
+    struct inventory_item data[100]; 
     
     // loop through data and count the quantity
     for(int i = 0; i < unique_count; i++)  
@@ -433,10 +439,67 @@ void view_record()
                 }
             }
         }
-        printf("%s", unique_product[i]);
         data[i].quantity = total;  // Store the total after calculation
-        printf("Product ID: %s, Current Stock: %d\n", data[i].product_id, data[i].quantity);
     }
+
+    int len_product = 0;
+    char product_data[100][100][100];
+    data_product(product_data, &len_product);
+
+    // Search the product id and retrieve the name
+    for(int i = 0; i < unique_count; i++)
+    {
+        for(int j = 0; j < len_product; j++)
+        {
+            if(strcmp(unique_product[i], product_data[j][0]) == 0)
+            {
+                strcpy(data[i].product_name, product_data[j][1]);
+                break;
+            }
+        }
+    }
+
+    // determining teh stock status
+    for(int i = 0; i < unique_count; i++)
+    {
+        if(data[i].quantity > 10)
+        {
+            strcpy(data[i].stock_status, "In Stock");
+        }
+
+        else if(data[i].quantity > 0 && data[i].quantity <= 10)
+        {
+            strcpy(data[i].stock_status, "Low Stock");
+        }
+
+        else
+        {
+            strcpy(data[i].stock_status, "Empty");
+        }
+    }
+
+    // Print title
+    add_space(26);
+    printf("INVENTORY\n");
+
+    // Print table header
+    border(default_border + 2);
+    printf("| Product ID | Product Name     | Current Stock | Status     |\n");
+    border(default_border + 2);
+
+    // Print table rows
+    for(int i = 0; i < unique_count; i++)
+    {
+        printf("| %-10s | %-16s | %-13d | %-10s |\n", 
+               data[i].product_id, 
+               data[i].product_name, 
+               data[i].quantity, 
+               data[i].stock_status);
+    }
+
+    // Print table footer
+    border(default_border + 2);
+    printf("\n");
 }
 
 
