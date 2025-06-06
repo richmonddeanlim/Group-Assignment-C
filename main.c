@@ -2,8 +2,8 @@
 // Run With gcc main.c function/staff_credentials.c -o program
 // Run With ./program
 
-
 #include "header/inventory_system.h"
+#include "header/inventory_record.h"
 #include "function/decoration.c"
 
 extern Staff users[Max_users];
