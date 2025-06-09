@@ -181,8 +181,8 @@ int menu()
     border(default_border);
     printf("1. Add stock inventory record\n");
     printf("2. Update stock level\n");
-    printf("3. Delete Discontinued Stock\n");
-    printf("4. View Current Invetory\n");
+    printf("3. Remove Discontinued Stock\n");
+    printf("4. View Current Inventory\n");
     printf("5. Exit\n");
     border(default_border);
     
@@ -437,7 +437,6 @@ void view_record()
                 if(strcmp(clean_status, "Discontinued") == 0)
                 {
                     is_discontinued = 1;
-                    printf("Found discontinued product: %s (Status: '%s')\n", record_data[k][1], clean_status); // Debug print
                 }
                 break;  // Found most recent record, stop checking
             }
@@ -544,7 +543,10 @@ void update_stock()
     int len_product = 0;
     char product_data[100][100][100];
     char product_id[100][100];
+    char record_data[100][100][100];
+    int len_record = 0;
     int choice;
+    char current_status[50] = "Active";  // Default status
     
     // retrieve product_id from the product.txt
     data_product(product_data, &len_product);
@@ -583,36 +585,48 @@ void update_stock()
             
         if(array_len == 4)
         {
-            // checking the product id inside the product.txt
-            char *condition = "False";
+            // First check if product exists in product.txt
+            int product_exists = 0;
             for(int i = 0; i < len_product; i++)
             {
-                // return the true when it same
                 if(strcmp(record.product_id, product_id[i]) == 0)
                 {
-                    condition = "True";
-                    while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
+                    product_exists = 1;
                     break;
-                }
-                
-                // give error message when the product id not registered
-                else if(i == len_product - 1 && strcmp(record.product_id, product_id[i]) != 0)
-                {
-                    condition = "False";
-                    printf("The product haven't added yet, the product id not in the product.txt\n");
                 }
             }
             
-            // break if the condition is true
-            if(condition == "True")
+            if(!product_exists)
             {
-                // Check if product is discontinued
-                char record_data[100][100][100];
-                int len_record = 0;
-                data_record(record_data, &len_record);
-                
-                int is_discontinued = 0;
-                // Check most recent record for discontinued status
+                printf("Error: Product ID not found in product database.\n");
+                continue;
+            }
+
+            // Then check if product has any records
+            data_record(record_data, &len_record);
+            int has_records = 0;
+            
+            // Check if product exists in records
+            for(int i = 1; i < len_record; i++)  // Start from 1 to skip header
+            {
+                if(strcmp(record_data[i][1], record.product_id) == 0)
+                {
+                    has_records = 1;
+                    break;
+                }
+            }
+
+            // For new products (no records), only allow restock
+            if(!has_records && choice != 1)
+            {
+                printf("Error: New products can only be restocked first.\n");
+                continue;
+            }
+
+            // Check current status of the product
+            if(has_records)
+            {
+                // Check most recent record for status
                 for(int k = len_record - 1; k >= 1; k--)
                 {
                     if(strcmp(record_data[k][1], record.product_id) == 0)
@@ -621,28 +635,28 @@ void update_stock()
                         char clean_status[100];
                         strcpy(clean_status, record_data[k][4]);
                         clean_string(clean_status);
+                        strcpy(current_status, clean_status);
                         
-                        if(strcmp(clean_status, "Discontinued") == 0)
+                        // Only prevent restocking of discontinued products
+                        if(strcmp(clean_status, "Discontinued") == 0 && choice == 1)
                         {
-                            is_discontinued = 1;
-                            strcpy(record.status, "Discontinued");
-                            break;
+                            printf("\nError: Cannot restock discontinued product.\n");
+                            return;
                         }
                         break;  // Found most recent record, stop checking
                     }
                 }
-                
-                if(!is_discontinued || choice != 1)
-                {
-                    break;
-                }
             }
+
+            // If we get here, all validations passed
+            while ((ch = getchar()) != '\n' && ch != EOF); // Clear input buffer
+            break;
         }
         
         else
         {
             while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
-            printf("Please enter the right format\n");
+            printf("Please enter the right format (Axxx)\n");
         }
     }
 
@@ -663,54 +677,23 @@ void update_stock()
     // Get quantity
     integer_valdiation("Enter the quantity: ", &record.quantity);
 
-    // Check if product is discontinued
-    char record_data[100][100][100];
-    int len_record = 0;
-    data_record(record_data, &len_record);
-    
-    int is_discontinued = 0;
-    // Check most recent record for discontinued status
-    for(int k = len_record - 1; k >= 1; k--)
-    {
-        if(strcmp(record_data[k][1], record.product_id) == 0)
-        {
-            // Clean the status string before comparing
-            char clean_status[100];
-            strcpy(clean_status, record_data[k][4]);
-            clean_string(clean_status);
-            
-            if(strcmp(clean_status, "Discontinued") == 0)
-            {
-                is_discontinued = 1;
-                strcpy(record.status, "Discontinued");
-                break;
-            }
-            break;  // Found most recent record, stop checking
-        }
-    }
-
-    // If not discontinued, set status as Active
-    if(!is_discontinued)
-    {
-        strcpy(record.status, "Active");
-    }
-
-    // Open the record file for appending
+    // Open the record file in append mode
     file_record = fopen(record_location, "a");
     if(file_record == NULL)
     {
-        printf("Error opening the record file\n");
+        printf("Error opening record file\n");
         return;
     }
 
-    // Write the record to the file with status
+    // Add new record with all information
     fprintf(file_record, "%s,%s,%s,%d,%s\n", 
             record.date, 
             record.product_id,
-            record.action, 
+            record.action,
             record.quantity,
-            record.status);
+            current_status);  // Use the current status
 
+    // Close the file
     fclose(file_record);
 
     printf("\nStock update recorded successfully!\n");
@@ -719,7 +702,7 @@ void update_stock()
     printf("Product ID: %s\n", record.product_id);
     printf("Action: %s\n", record.action);
     printf("Quantity: %d\n", record.quantity);
-    printf("Status: %s\n", record.status);
+    printf("Status: %s\n", current_status);
     printf("----------------------------------------\n");
     printf("\nPress Enter to continue...");
     while ((ch = getchar()) != '\n' && ch != EOF); // Clear input buffer
@@ -734,6 +717,8 @@ void remove_discontinued()
     int len_product = 0;
     char product_data[100][100][100];
     char product_id[100][100];
+    char record_data[100][100][100];
+    int len_record = 0;
     
     // retrieve product_id from the product.txt
     data_product(product_data, &len_product);
@@ -785,8 +770,6 @@ void remove_discontinued()
             if(strcmp(condition, "True") == 0)
             {
                 // Check if already discontinued
-                char record_data[100][100][100];
-                int len_record = 0;
                 data_record(record_data, &len_record);
                 
                 int is_discontinued = 0;
@@ -824,34 +807,27 @@ void remove_discontinued()
         }
     }
 
-    // Set action and status
-    strcpy(record.action, "Discontinued");
-    strcpy(record.status, "Discontinued");
-    record.quantity = 0;  // Set quantity to 0 for discontinued items
-
-    // Open the record file for appending
+    // Open the record file in append mode
     file_record = fopen(record_location, "a");
     if(file_record == NULL)
     {
-        printf("Error opening the record file\n");
+        printf("Error opening record file\n");
         return;
     }
 
-    // Write the record to the file
-    fprintf(file_record, "%s,%s,%s,%d,%s\n", 
+    // Add new record with Discontinued status
+    fprintf(file_record, "%s,%s,Discontinue,0,Discontinued\n", 
             record.date, 
-            record.product_id,
-            record.action, 
-            record.quantity,
-            record.status);
+            record.product_id);
 
+    // Close the file
     fclose(file_record);
 
-    printf("\nProduct marked as discontinued successfully!\n");
+    printf("\nProduct successfully marked as discontinued!\n");
     printf("----------------------------------------\n");
     printf("Date: %s\n", record.date);
     printf("Product ID: %s\n", record.product_id);
-    printf("Status: %s\n", record.status);
+    printf("Status: Discontinued\n");
     printf("----------------------------------------\n");
     printf("\nPress Enter to continue...");
     while ((ch = getchar()) != '\n' && ch != EOF); // Clear input buffer
@@ -877,7 +853,6 @@ int main()
         }
         else if(choice == 3)
         {
-            view_record();
             remove_discontinued();
         }
         else if(choice == 4)
