@@ -3,7 +3,6 @@
 // Run With ./program
 
 #include "header/inventory_system.h"
-#include "header/inventory_record.h"
 #include "header/decoration.h"  
 
 int login() {

@@ -1,5 +1,5 @@
 #include "../header/decoration.h"
-#include "../header/inventory_record.h"
+#include "../header/inventory_system.h"
 
 // Global Variable Definitions
 FILE *file_product;
