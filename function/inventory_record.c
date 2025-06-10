@@ -4,7 +4,9 @@
 #include <string.h>
 #include <time.h>
 #include "decoration.c"
+#include "inventory_record.h"
 
+// Global Variable Definitions
 FILE *file_product;
 FILE *file_record;
 char product_location[] = "../database/product.txt";
@@ -385,14 +387,34 @@ void add_record()
         fclose(file_record);
 
         // asking the user still want to continue or not
-        printf("Do you still want to contiinue (y/n): ");
+        printf("\nDo you still want to contiinue (y/n): ");
         scanf("%c", &record_loop);
+
     }
 }
 
-// view rrecord
+// view record
 void view_record()
 {
+    // Display view options
+    system("cls");
+    border(default_border);
+    add_space(15);
+    printf("View Inventory Options\n");
+    border(default_border);
+    printf("1. View Active Stock\n");
+    printf("2. View Discontinued Stock\n");
+    printf("3. View All Stock\n");
+    printf("4. Back to Main Menu\n");
+    border(default_border);
+    
+    int view_choice;
+    option_validation("Enter your choice: ", &view_choice, 4);
+    
+    if (view_choice == 4) {
+        return;  // Return to main menu
+    }
+
     char record_data[100][100][100];
     int len_record = 0;
     data_record(record_data, &len_record);  
@@ -442,11 +464,20 @@ void view_record()
             }
         }
         
-        // If not a duplicate and not discontinued, add to unique list
-        if(!is_duplicate && !is_discontinued)
-        {
-            strcpy(unique_product[unique_count], record_data[j][1]);
-            unique_count++;
+        // Add to unique list based on view choice
+        if(!is_duplicate) {
+            if (view_choice == 1 && !is_discontinued) {  // Active stock only
+                strcpy(unique_product[unique_count], record_data[j][1]);
+                unique_count++;
+            }
+            else if (view_choice == 2 && is_discontinued) {  // Discontinued stock only
+                strcpy(unique_product[unique_count], record_data[j][1]);
+                unique_count++;
+            }
+            else if (view_choice == 3) {  // All stock
+                strcpy(unique_product[unique_count], record_data[j][1]);
+                unique_count++;
+            }
         }
     }
     
@@ -497,23 +528,72 @@ void view_record()
     // determining the stock status
     for(int i = 0; i < unique_count; i++)
     {
-        if(data[i].quantity > 10)
+        // Check if product is discontinued
+        int is_discontinued = 0;
+        for(int k = len_record - 1; k >= 1; k--)
         {
-            strcpy(data[i].stock_status, "In Stock");
+            if(strcmp(record_data[k][1], data[i].product_id) == 0)
+            {
+                char clean_status[100];
+                strcpy(clean_status, record_data[k][4]);
+                clean_string(clean_status);
+                if(strcmp(clean_status, "Discontinued") == 0)
+                {
+                    is_discontinued = 1;
+                    strcpy(data[i].stock_status, "Discontinued");
+                }
+                break;
+            }
         }
-        else if(data[i].quantity > 0 && data[i].quantity <= 10)
-        {
-            strcpy(data[i].stock_status, "Low Stock");
-        }
-        else
-        {
-            strcpy(data[i].stock_status, "Empty");
+        
+        if (!is_discontinued) {
+            if(data[i].quantity > 10)
+            {
+                strcpy(data[i].stock_status, "In Stock");
+            }
+            else if(data[i].quantity > 0 && data[i].quantity <= 10)
+            {
+                strcpy(data[i].stock_status, "Low Stock");
+            }
+            else
+            {
+                strcpy(data[i].stock_status, "Empty");
+            }
         }
     }
 
-    // Print title
+    // Print title based on view choice
     add_space(26);
-    printf("INVENTORY\n");
+    switch(view_choice) {
+        case 1:
+            printf("ACTIVE INVENTORY\n");
+            break;
+        case 2:
+            printf("DISCONTINUED INVENTORY\n");
+            break;
+        case 3:
+            printf("ALL INVENTORY\n");
+            break;
+    }
+
+    // Check if there are any stocks to display
+    if (unique_count == 0) {
+        printf("\nNo stock found for the selected view.\n");
+        switch(view_choice) {
+            case 1:
+                printf("There are no active products in the inventory.\n");
+                break;
+            case 2:
+                printf("There are no discontinued products in the inventory.\n");
+                break;
+            case 3:
+                printf("There are no products in the inventory.\n");
+                break;
+        }
+        border(default_border + 2);
+        printf("\n");
+        return;
+    }
 
     // Print table header
     border(default_border + 2);
@@ -572,9 +652,14 @@ void update_stock()
         printf("1. Add Stock (Restock)\n");
         printf("2. Add Stock (Return)\n");
         printf("3. Remove Stock (Out)\n");
+        printf("4. Back to Menu\n");
         border(default_border);
         
-        option_validation("Enter your choice: ", &choice, 3);
+        option_validation("Enter your choice: ", &choice, 4);
+
+        if (choice == 4) {
+            return;  // Return to main menu
+        }
 
         //getting user input
         printf("Enter the product id (Axxx): ");
@@ -696,6 +781,7 @@ void update_stock()
     // Close the file
     fclose(file_record);
 
+    system("cls");
     printf("\nStock update recorded successfully!\n");
     printf("----------------------------------------\n");
     printf("Date: %s\n", record.date);
@@ -704,9 +790,6 @@ void update_stock()
     printf("Quantity: %d\n", record.quantity);
     printf("Status: %s\n", current_status);
     printf("----------------------------------------\n");
-    printf("\nPress Enter to continue...");
-    while ((ch = getchar()) != '\n' && ch != EOF); // Clear input buffer
-    getchar(); // Wait for Enter key
 }
 
 // remove or dfeltge the discontinued item
@@ -829,9 +912,6 @@ void remove_discontinued()
     printf("Product ID: %s\n", record.product_id);
     printf("Status: Discontinued\n");
     printf("----------------------------------------\n");
-    printf("\nPress Enter to continue...");
-    while ((ch = getchar()) != '\n' && ch != EOF); // Clear input buffer
-    getchar(); // Wait for Enter key
 }
 
 
@@ -843,28 +923,33 @@ int main()
         choice = menu();
         system("cls");
         
-        if(choice == 1)
+        switch(choice)
         {
-            add_record();
-        }
-        else if(choice == 2)
-        {
-            update_stock();
-        }
-        else if(choice == 3)
-        {
-            remove_discontinued();
-        }
-        else if(choice == 4)
-        {
-            view_record();
-        }
-        else if(choice == 5)
-        {
-            printf("Thank you for using the system!\n");
-            return 0;
+            case 1:
+                add_record();
+                break;
+                
+            case 2:
+                update_stock();
+                break;
+                
+            case 3:
+                remove_discontinued();
+                break;
+                
+            case 4:
+                view_record();
+                break;
+                
+            case 5:
+                return 0;
+                
+            default:
+                break;
         }
 
+        system("pause");
+        system("cls");
     }
     return 0;
 }   
