@@ -6,10 +6,6 @@
 #include "header/inventory_record.h"
 #include "function/decoration.c"
 
-extern Staff users[Max_users];
-extern int userCount;
-extern Staff currentUser;
-
 int login() {
     char username[50];
     char password[50];
