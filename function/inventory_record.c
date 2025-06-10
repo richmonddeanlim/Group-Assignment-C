@@ -1,10 +1,5 @@
-#include <stdio.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
 #include "decoration.c"
-#include "inventory_record.h"
+#include "../header/inventory_record.h"
 
 // Global Variable Definitions
 FILE *file_product;
@@ -13,22 +8,6 @@ char product_location[] = "../database/product.txt";
 char record_location[] = "../database/inventory_record.txt";
 
 // data structure for the inventory_record
-struct inventory_record
-{
-    char date[20];
-    char product_id[50];
-    char action[50];
-    int quantity;
-    char status[50];
-};
-
-struct inventory_item
-{
-    char product_id[50];
-    char product_name[50];
-    int quantity;
-    char stock_status[50];
-};
 
 // option validation function
 void option_validation(char *input_text,int *choice,int range)
