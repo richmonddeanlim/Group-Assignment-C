@@ -1,13 +1,11 @@
-#include "decoration.c"
+#include "../header/decoration.h"
 #include "../header/inventory_record.h"
 
 // Global Variable Definitions
 FILE *file_product;
 FILE *file_record;
-char product_location[] = "../database/product.txt";
-char record_location[] = "../database/inventory_record.txt";
-
-// data structure for the inventory_record
+char product_location[] = "database/product.txt";
+char record_location[] = "database/inventory_record.txt";
 
 // option validation function
 void option_validation(char *input_text,int *choice,int range)
@@ -150,28 +148,6 @@ void clean_string(char *str) {
         i++;
     }
     str[j] = '\0';
-}
-
-// inventory record management menu
-int menu()
-{
-   // giving menu interface for user
-    border(default_border);
-    add_space(15);
-    printf("Iventory and Stock management\n");
-    border(default_border);
-    printf("1. Add stock inventory record\n");
-    printf("2. Update stock level\n");
-    printf("3. Remove Discontinued Stock\n");
-    printf("4. View Current Inventory\n");
-    printf("5. Exit\n");
-    border(default_border);
-    
-    // geting user choices
-    int choice;
-    option_validation("Enter your choice: ",&choice,5);
-
-    return choice; 
 }
 
 // function adding new record for inventory
@@ -893,42 +869,3 @@ void remove_discontinued()
     printf("----------------------------------------\n");
 }
 
-
-int main()
-{
-    int choice;
-    while(1)
-    {
-        choice = menu();
-        system("cls");
-        
-        switch(choice)
-        {
-            case 1:
-                add_record();
-                break;
-                
-            case 2:
-                update_stock();
-                break;
-                
-            case 3:
-                remove_discontinued();
-                break;
-                
-            case 4:
-                view_record();
-                break;
-                
-            case 5:
-                return 0;
-                
-            default:
-                break;
-        }
-
-        system("pause");
-        system("cls");
-    }
-    return 0;
-}   

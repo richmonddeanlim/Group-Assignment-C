@@ -14,8 +14,7 @@ extern char product_location[];
 extern char record_location[];
 
 // Data Structures
-struct inventory_record
-{
+struct inventory_record {
     char date[20];
     char product_id[50];
     char action[50];
@@ -23,32 +22,31 @@ struct inventory_record
     char status[50];
 };
 
-struct inventory_item
-{
+struct inventory_item {
     char product_id[50];
     char product_name[50];
     int quantity;
     char stock_status[50];
 };
 
-// Function Declarations
-
-// Menu and Main Functions
-int menu();
+// Main Inventory Functions
 void add_record();
 void update_stock();
-void view_record();
 void remove_discontinued();
+void view_record();
 
-// Validation Functions
+// Utility and Validation Functions
 void option_validation(char *input_text, int *choice, int range);
 void integer_valdiation(char *input_text, int *user_input);
 void arr_len(char array[], int *array_len);
 void str_lower(char *str);
 void clean_string(char *str);
 
-// Data Management Functions
+// Data Loading Functions
 void data_product(char data[100][100][100], int *line_array);
 void data_record(char data[100][100][100], int *line_array);
+
+// Optional: if you want to expose the menu function (not required)
+int menu();  // Only keep if you call this from main.c (which you likely won’t)
 
 #endif

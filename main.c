@@ -1,10 +1,10 @@
 // First do cd Group-Assignment-C-main in the terminal
-// Run With gcc main.c function/staff_credentials.c -o program
+// Run With gcc main.c function/staff_credentials.c function/decoration.c function/inventory_record.c -o program
 // Run With ./program
 
 #include "header/inventory_system.h"
 #include "header/inventory_record.h"
-#include "function/decoration.c"
+#include "header/decoration.h"  
 
 int login() {
     char username[50];
@@ -112,10 +112,10 @@ void role2Menu(int isAdmin) {
         printf("Current User: %s (Role: %s)\n", currentUser.username, currentUser.role);
         border(default_border);
         printf("\n=== Inventory and Stock Management ===\n");
-        printf("1. Add Stock Inventory\n");
-        printf("2. Update Stock Levels\n");
-        printf("3. Remove Stock Items\n");
-        printf("4. View Inventory Levels\n");
+        printf("1. Add stock inventory record\n");
+        printf("2. Update stock level\n");
+        printf("3. Remove Discontinued Stock\n");
+        printf("4. View Current Inventory\n");
         if (isAdmin) {
             printf("5. Return to Main Menu\n");
         } else {
@@ -128,19 +128,19 @@ void role2Menu(int isAdmin) {
 
         switch (choice) {
             case 1:
-                printf("\nAdd Stock Inventory functionality will be implemented here\n");
+                add_record();
                 system("pause");
                 break;
             case 2:
-                printf("\nUpdate Stock Levels functionality will be implemented here\n");
+                update_stock();
                 system("pause");
                 break;
             case 3:
-                printf("\nRemove Stock Items functionality will be implemented here\n");
+                remove_discontinued();
                 system("pause");
                 break;
             case 4:
-                printf("\nView Inventory Levels functionality will be implemented here\n");
+                view_record();
                 system("pause");
                 break;
             case 5:

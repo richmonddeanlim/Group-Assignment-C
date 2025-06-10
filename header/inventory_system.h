@@ -15,14 +15,6 @@ typedef struct {
     char role[20];
 } Staff;
 
-typedef struct {
-    char name[100];
-    float price;
-    int quantity;
-    char category[50];
-    char supplier[50];
-} Product;
-
 // For Global Variables Declaration
 extern Staff users[Max_users];
 extern int userCount;
