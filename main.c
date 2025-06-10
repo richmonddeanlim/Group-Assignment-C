@@ -1,5 +1,5 @@
 // First do cd Group-Assignment-C-main in the terminal
-// Run With gcc main.c function/staff_credentials.c function/decoration.c function/inventory_record.c -o program
+// Run With gcc main.c function/*.c -o program
 // Run With ./program
 
 #include "header/inventory_system.h"
