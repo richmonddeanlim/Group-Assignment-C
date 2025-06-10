@@ -1,1 +1,1 @@
-gcc main.c function/user_credentials.c -o program
+//gcc main.c function/user_credentials.c -o program
