@@ -366,9 +366,12 @@ void view_record()
     int view_choice;
     option_validation("Enter your choice: ", &view_choice, 4);
     
+    system("cls");
+
     if (view_choice == 4) {
         return;  // Return to main menu
     }
+
 
     char record_data[100][100][100];
     int len_record = 0;
@@ -480,11 +483,10 @@ void view_record()
         }
     }
 
-    // determining the stock status
+    // determining the stock status and product status
     for(int i = 0; i < unique_count; i++)
     {
         // Check if product is discontinued
-        int is_discontinued = 0;
         for(int k = len_record - 1; k >= 1; k--)
         {
             if(strcmp(record_data[k][1], data[i].product_id) == 0)
@@ -492,28 +494,24 @@ void view_record()
                 char clean_status[100];
                 strcpy(clean_status, record_data[k][4]);
                 clean_string(clean_status);
-                if(strcmp(clean_status, "Discontinued") == 0)
-                {
-                    is_discontinued = 1;
-                    strcpy(data[i].stock_status, "Discontinued");
-                }
+                // Store the product status in the struct
+                strcpy(data[i].product_status, clean_status);
                 break;
             }
         }
         
-        if (!is_discontinued) {
-            if(data[i].quantity > 10)
-            {
-                strcpy(data[i].stock_status, "In Stock");
-            }
-            else if(data[i].quantity > 0 && data[i].quantity <= 10)
-            {
-                strcpy(data[i].stock_status, "Low Stock");
-            }
-            else
-            {
-                strcpy(data[i].stock_status, "Empty");
-            }
+        // Set stock status based on quantity
+        if(data[i].quantity > 10)
+        {
+            strcpy(data[i].stock_status, "In Stock");
+        }
+        else if(data[i].quantity > 0 && data[i].quantity <= 10)
+        {
+            strcpy(data[i].stock_status, "Low Stock");
+        }
+        else
+        {
+            strcpy(data[i].stock_status, "Empty");
         }
     }
 
@@ -545,28 +543,38 @@ void view_record()
                 printf("There are no products in the inventory.\n");
                 break;
         }
-        border(default_border + 2);
+        border(default_border + 21);
         printf("\n");
         return;
     }
 
     // Print table header
-    border(default_border + 2);
-    printf("| Product ID | Product Name     | Current Stock | Status     |\n");
-    border(default_border + 2);
+    border(default_border + 21);
+    printf("| Product ID | Product Name     | Current Stock | Stock Status | Product Status |\n");
+    border(default_border + 21);
 
     // Print table rows
     for(int i = 0; i < unique_count; i++)
     {
-        printf("| %-10s | %-16s | %-13d | %-10s |\n", 
+        // Skip discontinued items in active view
+        if (view_choice == 1 && strcmp(data[i].product_status, "Discontinued") == 0) {
+            continue;
+        }
+        // Skip active items in discontinued view
+        if (view_choice == 2 && strcmp(data[i].product_status, "Active") == 0) {
+            continue;
+        }
+        
+        printf("| %-10s | %-16s | %-13d | %-12s | %-14s |\n", 
                data[i].product_id, 
                data[i].product_name, 
                data[i].quantity, 
-               data[i].stock_status);
+               data[i].stock_status,
+               data[i].product_status);
     }
 
     // Print table footer
-    border(default_border + 2);
+    border(default_border + 21);
     printf("\n");
 }
 

@@ -18,3 +18,7 @@ Date,Product_Id,Action,Quantity,Status
 10-06-2025,A001,Discontinue,0,Discontinued
 10-06-2025,A002,Return,20,Active
 12-10-2025,A001,Return,20,Active
+12-10-2025,A001,Restock,10,Active
+12-10-2024,A001,Restock,20,Active
+12-06-2025,A001,Restock,20,Active
+12-06-2025,A001,Discontinue,0,Discontinued

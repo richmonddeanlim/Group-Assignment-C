@@ -125,6 +125,7 @@ void role2Menu(int isAdmin) {
         getValidInput("Enter your choice: ", choiceStr, sizeof(choiceStr));
         choice = atoi(choiceStr);
 
+        clearScreen();
         switch (choice) {
             case 1:
                 add_record();

@@ -31,6 +31,7 @@ struct inventory_item {
     char product_name[50];
     int quantity;
     char stock_status[50];
+    char product_status[50];
 };
 
 // Global Variables
