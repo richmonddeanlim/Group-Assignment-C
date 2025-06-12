@@ -246,7 +246,7 @@ void add_record()
             int array_len = 0;
             
             //getting user input
-            printf("Enter the product id (Axxx): ");
+            printf("Enter the product id ([A/M/C]xxx): ");
             scanf("%s", &record.product_id);
             
             // getting arr len for valdiation
@@ -254,31 +254,39 @@ void add_record()
             
             if(array_len == 4)
             {
-                
-                // checking the product id inside the product.txt
-                char *condition = "False";
-                for(int i = 0; i < line; i++)
+                if(record.product_id[0] == 'A' || record.product_id[0] == 'M' || record.product_id[0] == 'C')
                 {
-                    // return the true when it same
-                    if(strcmp(record.product_id, product_id[i]) == 0)
+                    // checking the product id inside the product.txt
+                    char *condition = "False";
+                    for(int i = 0; i < line; i++)
                     {
-                        condition = "True";
-                        while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
-                        break;
+                        // return the true when it same
+                        if(strcmp(record.product_id, product_id[i]) == 0)
+                        {
+                            condition = "True";
+                            while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
+                            break;
+                        }
+                        
+                        // give error message when the product id not registered
+                        else if(i == line - 1 && strcmp(record.product_id, product_id[i]) != 0)
+                        {
+                            condition = "False";
+                            printf("The product haven't addded yet, the product id not in the product.txt\n");
+                        }
                     }
                     
-                    // give error message when the product id not registered
-                    else if(i == line - 1 && strcmp(record.product_id, product_id[i]) != 0)
+                    // break if the condition is true
+                    if(condition == "True")
                     {
-                        condition = "False";
-                        printf("The product haven't addded yet, the product id not in the product.txt\n");
+                        break;
                     }
                 }
-                
-                // break if the condition is true
-                if(condition == "True")
+
+                else
                 {
-                    break;
+                    printf("Product ID must start with A, M, or C\n");
+                    while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
                 }
             }
             
