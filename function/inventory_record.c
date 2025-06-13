@@ -1,4 +1,3 @@
-#include "../header/decoration.h"
 #include "../header/inventory_system.h"
 
 // Global Variable Definitions
