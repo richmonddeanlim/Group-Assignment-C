@@ -80,8 +80,8 @@ void data_product(char data[100][100][100], int *line_array)
     FILE *file_product = fopen(product_location, "r");
 
     if(file_product == NULL) {
-        printf("Error opening file.\n");
-        return;
+        printf("Error opening product file. Program will exit.\n");
+        exit(1);
     }
 
     char raw_product[100][100];
@@ -111,8 +111,8 @@ void data_record(char data[100][100][100], int *line_array)
     FILE *file_record = fopen(record_location, "r");
 
     if(file_record == NULL) {
-        printf("Error opening file.\n");
-        return;
+        printf("Error opening record file\n");
+        exit(1);
     }
 
     char raw_record[100][100];
@@ -338,8 +338,8 @@ void add_record()
         // check the file is there or not
         if(file_record == NULL)
         {
-            printf("Error openning the file\n");
-            return  ;
+            printf("Error opening record file.\n");
+            exit(1);
         }
 
         // write the record into the text file
@@ -431,15 +431,15 @@ void view_record()
         
         // Add to unique list based on view choice
         if(!is_duplicate) {
-            if (view_choice == 1 && !is_discontinued) {  // Active stock only
+            if (view_choice == 1 && !is_discontinued) { 
                 strcpy(unique_product[unique_count], record_data[j][1]);
                 unique_count++;
             }
-            else if (view_choice == 2 && is_discontinued) {  // Discontinued stock only
+            else if (view_choice == 2 && is_discontinued) {  
                 strcpy(unique_product[unique_count], record_data[j][1]);
                 unique_count++;
             }
-            else if (view_choice == 3) {  // All stock
+            else if (view_choice == 3) {  
                 strcpy(unique_product[unique_count], record_data[j][1]);
                 unique_count++;
             }
@@ -470,7 +470,7 @@ void view_record()
                 }
             }
         }
-        data[i].quantity = total;  // Store the total after calculation
+        data[i].quantity = total;  
     }
 
     int len_product = 0;
@@ -736,8 +736,8 @@ void update_stock()
     file_record = fopen(record_location, "a");
     if(file_record == NULL)
     {
-        printf("Error opening record file\n");
-        return;
+        printf("Error opening record file.\n");
+        exit(1);
     }
 
     // Add new record with all information
@@ -865,7 +865,7 @@ void remove_discontinued()
     if(file_record == NULL)
     {
         printf("Error opening record file\n");
-        return;
+        exit(1);
     }
 
     // Add new record with Discontinued status
@@ -883,4 +883,3 @@ void remove_discontinued()
     printf("Status: Discontinued\n");
     printf("----------------------------------------\n");
 }
-
