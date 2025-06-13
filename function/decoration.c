@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../header/decoration.h"
+#include "../header/inventory_system.h"
 
 // adding border
 // tyhe default is 60, can be chnage based on usage

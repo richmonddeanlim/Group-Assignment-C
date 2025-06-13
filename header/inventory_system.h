@@ -9,6 +9,7 @@
 
 #define MAX_LINE_LENGTH 256
 #define Max_users 100
+#define default_border 60
 
 // Staff and Product
 typedef struct {
@@ -80,5 +81,10 @@ void clean_string(char *str);
 // --- Data Loaders ---
 void data_product(char data[100][100][100], int *line_array);
 void data_record(char data[100][100][100], int *line_array);
+
+// --- Decoration Functions ---
+void border(int num);
+void add_space(int num);
+
 
 #endif
