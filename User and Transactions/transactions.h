@@ -9,6 +9,8 @@ void getValidInput();
 void addUser();
 void deleteUser();
 void loadCustomerCredentials();
+void updateUser();
+bool duplicateChecker();
 
 extern int customerCount;
 

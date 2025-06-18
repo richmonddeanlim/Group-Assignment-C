@@ -21,7 +21,6 @@ void loadCustomerCredentials() {
             }
         }
     }
-    printf("Im working");
     fclose(file);
 }
 
@@ -37,6 +36,7 @@ int main() {
         while (validAnswer == false) {
             printf(">>>   ");
             scanf("%d",&selection);
+            while (getchar() != '\n'); // Clear the input buffer after reading selection
             switch (selection) {
                 case 1:
                     user();
@@ -78,10 +78,11 @@ void user() {
             addUser();
             user();
         case 2:
-            break; 
+            updateUser();
+            user();
         case 3:
             deleteUser();
-            user; 
+            user();
         case 4:
             break;   
         case 5:
@@ -126,24 +127,31 @@ void getValidInput(char* prompt, char* buffer, int maxLength) {
     } while (1);
 }
 
+bool duplicateChecker(char* targetedtext) {
+    FILE *file = fopen(customerFile, "r");
+    Customer Customer;
+    for (int i = 0; i < customerCount; i++) {
+        if (strcmp(customers[i].username, targetedtext) == 0) {
+            printf("Username already exists. Please try again.\n\n");
+            return true;
+            break;
+        }
+    }
+    return false;
+}
+
 void addUser() {
     bool duplicateUsername;
     Customer Customer;
     while (getchar() != '\n');
-    
+    printf("%s",menutext);
+
     do {
         duplicateUsername = false;
-        printf("%s",menutext);
         getValidInput("Enter new username: ", Customer.username, sizeof(Customer.username));
+        duplicateUsername = duplicateChecker(Customer.username);
+    } while (duplicateUsername == true);
 
-        for (int i = 0; i < customerCount; i++) {
-            if (strcmp(customers[i].username, Customer.username) == 0) {
-                printf("Error: Username already exists. Please try again.\n");
-                duplicateUsername = true;
-                break;
-            }
-        }
-    } while (duplicateUsername);
     getValidInput("Enter new password: ", Customer.password, sizeof(Customer.password));
     // Add the new user to the customers array
     strcpy(customers[customerCount].username, Customer.username);
@@ -198,4 +206,74 @@ void deleteUser() {
     rename("temporary.txt", "customer_credentials.txt");
     printf("User '%s' has been deleted from the database successfully.\n", Customer.username);
 }
+
+void updateUser() {
+    char oldUsername[50], newUsername[50];
+    bool duplicateUsername;
+    int selection;
+    FILE *file = fopen(customerFile, "r");
+    FILE *tempFile = fopen("temporary.txt", "w");
+    Customer Customer;
+    printf("%s",menutext);
+
+    printf("1. Username\n");
+    printf("2. Password\n");
+    printf("\nPlease choose which data to be updated.");
+    printf("\n>>>   ");
+    scanf("%d",&selection);
+    bool userFound = false;
+    switch (selection) {
+        case 1:
+            while (getchar() != '\n');
+            do {
+                printf("%s",menutext);
+                getValidInput("Enter username to be updated: ", oldUsername, sizeof(oldUsername));
+                for (int i = 0; i < customerCount; i++) {
+                    if (strcmp(customers[i].username, oldUsername) == 0) {
+                        userFound = true;
+                        break;
+                    }
+                }
+
+                if (!userFound) {
+                    printf("Error: Username '%s' not found. Please try again.\n", oldUsername);
+                }
+            } while (!userFound);
+
+            // Prompt for new username
+            
+            do {
+                duplicateUsername = false;
+                getValidInput("Enter new username: ", newUsername, sizeof(newUsername));
+                for (int i = 0; i < customerCount; i++) {
+                    if (strcmp(customers[i].username, newUsername) == 0) {
+                        printf("\nUsername already exists. Please try again.\n");
+                        duplicateUsername = true;
+                        break;
+                    }
+                }
+            } while (duplicateUsername == true);
+
+            char line[256];
+            while (fgets(line, sizeof(line), file)) {
+                char username[50], password[50];
+                sscanf(line, "%49[^,],%49s", username, password); // Extract username and password from the line
+
+                if (strcmp(username, oldUsername) == 0) {
+                    fprintf(tempFile, "%s,%s\n", newUsername, password); // Replace username
+                } else {
+                    fputs(line, tempFile); // Write other lines unchanged
+                }
+            }
+            fclose(file);
+            fclose(tempFile);
+            remove(customerFile);
+            rename("temporary.txt","customer_credentials.txt");
+            printf("Username updated successfully.\n");
+            break;
+        case 2:
+            break;
+        }
+    }
+
 
