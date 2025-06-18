@@ -1,8 +1,14 @@
+const char *menutext = "\n--- User and Transaction Management System ---\n\n";
+const char *customerFile = "customer_credentials.txt";
+
+#define MAX_CUSTOMERS 100
 
 void user();
 void transactions();
 void getValidInput();
 void addUser();
+void deleteUser();
+void loadCustomerCredentials();
 
 extern int customerCount;
 

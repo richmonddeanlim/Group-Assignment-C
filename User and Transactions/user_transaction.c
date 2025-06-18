@@ -3,13 +3,6 @@
 #include <string.h>
 #include "transactions.h"
 
-const char *menutext = "\n--- User and Transaction Management System ---\n\n";
-const char *customerFile = "customer_credentials.txt";
-
-#define MAX_CUSTOMERS 100
-
-// Define the customer struct
-
 Customer customers[MAX_CUSTOMERS]; // Array to store customer data
 int customerCount = 0; // Number of customers loaded
 
@@ -36,25 +29,25 @@ int main() {
     int selection;
     loadCustomerCredentials(); // Load customer credentials at the start
     while (1) {
-        bool validanswer = false;
         printf("%s",menutext);
         printf("Welcome to User and Transaction Management System!\n\n");
         printf("1. Modify users\n");
         printf("2. Modify transaction records\n\n");
-        while (validanswer == false) {
+        bool validAnswer = false;
+        while (validAnswer == false) {
             printf(">>>   ");
             scanf("%d",&selection);
             switch (selection) {
                 case 1:
                     user();
-                    validanswer = true;    
+                    validAnswer = true;    
                     break;
                 case 2:
                     transactions();
-                    validanswer = true;   
+                    validAnswer = true;   
                     break;
                 case 3:
-                    validanswer = true;
+                    validAnswer = true;
                     break;
                 default:
                     printf("\nInvalid choice. Please try again.\n");
@@ -83,11 +76,12 @@ void user() {
     switch (selection) {
         case 1:
             addUser();
-            break; 
+            user();
         case 2:
             break; 
         case 3:
-            break; 
+            deleteUser();
+            user; 
         case 4:
             break;   
         case 5:
@@ -122,7 +116,7 @@ void getValidInput(char* prompt, char* buffer, int maxLength) {
     do {
         printf("%s", prompt);
         fgets(buffer, maxLength, stdin);
-        buffer[strcspn(buffer, "\n")] = 0;  // Remove newline
+        buffer[strcspn(buffer, "\n")] = 0; 
         
         if (strlen(buffer) == 0) {
             printf("\nInput cannot be empty! Please try again.\n");
@@ -133,39 +127,75 @@ void getValidInput(char* prompt, char* buffer, int maxLength) {
 }
 
 void addUser() {
-    bool duplicateUsername = true;
+    bool duplicateUsername;
     Customer Customer;
     while (getchar() != '\n');
-
-    while (duplicateUsername = true) {
+    
+    do {
+        duplicateUsername = false;
+        printf("%s",menutext);
         getValidInput("Enter new username: ", Customer.username, sizeof(Customer.username));
 
         for (int i = 0; i < customerCount; i++) {
             if (strcmp(customers[i].username, Customer.username) == 0) {
-                printf("Error: Username already exists.\n");
+                printf("Error: Username already exists. Please try again.\n");
+                duplicateUsername = true;
+                break;
             }
         }
-        duplicateUsername = false;
-        break;
-    }
-    
-
+    } while (duplicateUsername);
     getValidInput("Enter new password: ", Customer.password, sizeof(Customer.password));
-
     // Add the new user to the customers array
     strcpy(customers[customerCount].username, Customer.username);
     strcpy(customers[customerCount].password, Customer.password);
     customerCount++;
 
-    // Update the customer_credentials.txt file
     FILE *file;
     file = fopen("customer_credentials.txt", "a");
     if (file == NULL) {
         perror("Error: Could not open file for appending");
         return;
     }
-    fprintf(file, "%s,%s\n", Customer.username, Customer.password); // Ensure newline is added
+    fprintf(file, "%s,%s\n", Customer.username, Customer.password); 
     fclose(file);
 
     printf("User '%s' added successfully and saved to file.\n", Customer.username);
 }
+
+void deleteUser() {
+    FILE *file = fopen(customerFile, "r");
+    FILE *tempFile = fopen("temporary.txt", "w");
+    Customer Customer;
+    while (getchar()!= '\n');
+    bool successfullDelete = false;
+
+    while (!successfullDelete) {
+        printf("%s",menutext);
+        getValidInput("Enter username to be deleted: ", Customer.username, sizeof(Customer.username));
+        for (int i = 0; i < customerCount; i++) {
+            if (strcmp(customers[i].username, Customer.username) == 0) {
+                successfullDelete = true;
+                break;
+            }
+        }
+
+        if (!successfullDelete) {
+            printf("Error: Username '%s' not found. Please try again.\n", Customer.username);
+        }
+    }
+    char line[256];
+    while (fgets(line, sizeof(line), file)) {
+        char username[50];
+        sscanf(line, "%49[^,]", username); // extract usernames from the line
+
+        if (strcmp(username, Customer.username) != 0) {
+            fputs(line, tempFile); // write all lines except the one to delete
+        }
+    }
+    fclose(file);
+    fclose(tempFile);
+    remove(customerFile);               // replace old file with new file
+    rename("temporary.txt", "customer_credentials.txt");
+    printf("User '%s' has been deleted from the database successfully.\n", Customer.username);
+}
+
