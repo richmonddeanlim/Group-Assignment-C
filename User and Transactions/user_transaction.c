@@ -8,6 +8,7 @@ int customerCount = 0; // Number of customers loaded
 
 void loadCustomerCredentials() {
     FILE *file = fopen(customerFile, "r");
+    customerCount = 0;
     char line[256];
     while (fgets(line, sizeof(line), file) && customerCount < MAX_CUSTOMERS) {
         char *token = strtok(line, ",");
@@ -26,8 +27,8 @@ void loadCustomerCredentials() {
 
 int main() {
     int selection;
-    loadCustomerCredentials(); // Load customer credentials at the start
-    while (1) {
+    loadCustomerCredentials();
+    while (true) {
         printf("%s",menutext);
         printf("Welcome to User and Transaction Management System!\n\n");
         printf("1. Modify users\n");
@@ -36,15 +37,14 @@ int main() {
         while (validAnswer == false) {
             printf(">>>   ");
             scanf("%d",&selection);
-            while (getchar() != '\n'); // Clear the input buffer after reading selection
             switch (selection) {
                 case 1:
-                    user();
-                    validAnswer = true;    
+                    validAnswer = true; 
+                    user();   
                     break;
                 case 2:
+                    validAnswer = true;  
                     transactions();
-                    validAnswer = true;   
                     break;
                 case 3:
                     validAnswer = true;
@@ -64,30 +64,49 @@ int main() {
 }
 
 void user() {
-    int selection;
-    printf("%s",menutext);
-    printf("1. Add new user\n");
-    printf("2. Update user information\n");
-    printf("3. Delete user account\n");
-    printf("4. View user details\n");
-    printf("5. Back to main menu\n\n");
-    printf(">>>   ");
-    scanf("%d",&selection);
-    switch (selection) {
-        case 1:
-            addUser();
-            user();
-        case 2:
-            updateUser();
-            user();
-        case 3:
-            deleteUser();
-            user();
-        case 4:
-            break;   
-        case 5:
-            break;
-        }
+    while (true) {
+
+        bool validAnswer = false;
+        int selection;
+        printf("%s",menutext);
+        printf("1. Add new user\n");
+        printf("2. Update user information\n");
+        printf("3. Delete user account\n");
+        printf("4. View user details\n");
+        printf("5. Back to main menu\n\n");;
+        while (validAnswer == false) {
+            loadCustomerCredentials();
+            printf("I loaded again");
+            printf(">>>   ");
+            scanf("%d",&selection);
+            switch (selection) {
+                case 1:
+                    addUser();
+                    validAnswer = true;
+                    break;
+                case 2:
+                    updateUser();
+                    validAnswer = true;
+                    break;
+                case 3:
+                    deleteUser();
+                    validAnswer = true;
+                    break;
+                case 4:
+                    viewUser();
+                    validAnswer = true;
+                    break;
+                case 5:
+                    main();
+                    validAnswer = true;
+                    break;
+                default:
+                    printf("\nInvalid choice. Please try again.\n");
+                    while (getchar() != '\n');
+                        break;
+            }
+        }   
+    }
 }
 
 void transactions() {
@@ -160,10 +179,6 @@ void addUser() {
 
     FILE *file;
     file = fopen("customer_credentials.txt", "a");
-    if (file == NULL) {
-        perror("Error: Could not open file for appending");
-        return;
-    }
     fprintf(file, "%s,%s\n", Customer.username, Customer.password); 
     fclose(file);
 
@@ -176,9 +191,9 @@ void deleteUser() {
     Customer Customer;
     while (getchar()!= '\n');
     bool successfullDelete = false;
+    printf("%s",menutext);
 
     while (!successfullDelete) {
-        printf("%s",menutext);
         getValidInput("Enter username to be deleted: ", Customer.username, sizeof(Customer.username));
         for (int i = 0; i < customerCount; i++) {
             if (strcmp(customers[i].username, Customer.username) == 0) {
@@ -188,7 +203,7 @@ void deleteUser() {
         }
 
         if (!successfullDelete) {
-            printf("Error: Username '%s' not found. Please try again.\n", Customer.username);
+            printf("Error: Username '%s' not found. Please try again.\n\n", Customer.username);
         }
     }
     char line[256];
@@ -208,41 +223,38 @@ void deleteUser() {
 }
 
 void updateUser() {
-    char oldUsername[50], newUsername[50];
-    bool duplicateUsername;
+    char oldUsername[50], newUsername[50], oldPassword[50], newPassword[50];
+    bool duplicateUsername, userFound;
     int selection;
     FILE *file = fopen(customerFile, "r");
     FILE *tempFile = fopen("temporary.txt", "w");
     Customer Customer;
     printf("%s",menutext);
-
+    while (getchar() != '\n');
+    do {
+        getValidInput("Enter username to be updated: ", oldUsername, sizeof(oldUsername));
+        for (int i = 0; i < customerCount; i++) {
+            if (strcmp(customers[i].username, oldUsername) == 0) {
+                userFound = true;
+                break;
+            }
+        }
+        if (!userFound) {
+            printf("Error: Username '%s' not found. Please try again.\n\n", oldUsername);
+        }
+    } while (!userFound);
+    printf("%s",menutext);
+    printf("Selected Username: %s\n\n", oldUsername);
     printf("1. Username\n");
     printf("2. Password\n");
     printf("\nPlease choose which data to be updated.");
     printf("\n>>>   ");
     scanf("%d",&selection);
-    bool userFound = false;
     switch (selection) {
         case 1:
+            printf("%s",menutext);
             while (getchar() != '\n');
-            do {
-                printf("%s",menutext);
-                getValidInput("Enter username to be updated: ", oldUsername, sizeof(oldUsername));
-                for (int i = 0; i < customerCount; i++) {
-                    if (strcmp(customers[i].username, oldUsername) == 0) {
-                        userFound = true;
-                        break;
-                    }
-                }
-
-                if (!userFound) {
-                    printf("Error: Username '%s' not found. Please try again.\n", oldUsername);
-                }
-            } while (!userFound);
-
-            // Prompt for new username
-            
-            do {
+            do {                // Enter new username section
                 duplicateUsername = false;
                 getValidInput("Enter new username: ", newUsername, sizeof(newUsername));
                 for (int i = 0; i < customerCount; i++) {
@@ -265,15 +277,48 @@ void updateUser() {
                     fputs(line, tempFile); // Write other lines unchanged
                 }
             }
-            fclose(file);
-            fclose(tempFile);
-            remove(customerFile);
-            rename("temporary.txt","customer_credentials.txt");
-            printf("Username updated successfully.\n");
+            printf("\nUsername updated successfully.\n");
             break;
         case 2:
+            while (getchar() != '\n');
+            duplicateUsername = false;      // Enter new password section
+
+            printf("%s",menutext);
+            getValidInput("Enter new password: ", newPassword, sizeof(newPassword));
+                
+            while (fgets(line, sizeof(line), file)) {
+                char username[50], password[50];
+                sscanf(line, "%49[^,],%49s", username, password); 
+
+                if (strcmp(username, oldUsername) == 0) {
+                    fprintf(tempFile, "%s,%s\n", username, newPassword); // Replace password
+                } else {
+                    fputs(line, tempFile); // Write other lines unchanged
+                }
+            }
+            printf("\nPassword updated successfully.\n");
             break;
         }
+        fclose(file);
+        fclose(tempFile);
+        remove(customerFile);
+        rename("temporary.txt","customer_credentials.txt");
     }
 
+void viewUser() {
+    Customer Customer;
+    FILE *file = fopen(customerFile, "r");
+    
+    printf("\n%s",menutext);
+    printf("%-20s %-20s\n", "Username", "Password");
+    printf("%-20s %-20s\n", "-------------------", "-------------------");
+
+    char line[256];
+    while (fgets(line, sizeof(line), file)) {
+        char username[50], password[50];
+        sscanf(line, "%49[^,],%49s", Customer.username, Customer.password); 
+        printf("%-20s %-20s\n", Customer.username, Customer.password);
+    }
+    fclose(file);
+}
 

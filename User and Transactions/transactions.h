@@ -10,6 +10,7 @@ void addUser();
 void deleteUser();
 void loadCustomerCredentials();
 void updateUser();
+void viewUser();
 bool duplicateChecker();
 
 extern int customerCount;
