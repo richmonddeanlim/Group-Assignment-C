@@ -1,0 +1,3 @@
+1,Mobile Devices,Smartphones and tablets
+2,Computers,Desktops and laptops
+3,Accessory,Cables and chargers
