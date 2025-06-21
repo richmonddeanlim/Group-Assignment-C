@@ -152,7 +152,6 @@ void clean_string(char *str) {
 // function adding new record for inventory
 void add_record()               
 {
-    // File location
     struct inventory_record record;
     char ch;
     char condition;
@@ -188,6 +187,7 @@ void add_record()
             // further date validation
             if(array_len == 10)
             {
+                // check the format is it using - in between date
                 if(record.date[2] == '-' && record.date[5] == '-')
                 {
                     int day = (int) (((record.date[0] - '0') * 10) + record.date[1] - '0'); 
@@ -225,6 +225,7 @@ void add_record()
                 
             }
             
+            // check the length 
             else if(array_len < 10)
             {
                 printf("Pls input the right format\n");
@@ -253,6 +254,7 @@ void add_record()
             
             if(array_len == 4)
             {
+                // Check the product id
                 if(record.product_id[0] == 'A' || record.product_id[0] == 'M' || record.product_id[0] == 'C')
                 {
                     // checking the product id inside the product.txt
@@ -348,10 +350,22 @@ void add_record()
         // close the txt file
         fclose(file_record);
 
+        // display sucessfull notification
+            system("cls");
+        printf("\nStock recorded successfully!\n");
+        printf("----------------------------------------\n");
+        printf("Date: %s\n", record.date);
+        printf("Product ID: %s\n", record.product_id);
+        printf("Action: %s\n", record.action);
+        printf("Quantity: %d\n", record.quantity);
+        printf("----------------------------------------\n");
+
+
         // asking the user still want to continue or not
         printf("\nDo you still want to contiinue (y/n): ");
         scanf("%c", &record_loop);
 
+        
     }
 }
 
@@ -391,7 +405,7 @@ void view_record()
     // finding the unique value
     for(int j = 1; j < len_record; j++)  // Start from 1 to skip header
     {
-        // Skip empty product IDs
+        // skip empty product IDs
         if(strlen(record_data[j][1]) == 0 || record_data[j][1][0] == '\0') 
         {
             continue;
@@ -632,7 +646,7 @@ void update_stock()
         }
 
         //getting user input
-        printf("Enter the product id (Axxx): ");
+        printf("Enter the product id ([A/M/C])xxx: ");
         scanf("%s", record.product_id);
         
         // getting arr len for validation
@@ -657,11 +671,11 @@ void update_stock()
                 continue;
             }
 
-            // Then check if product has any records
+            // check if product has any records
             data_record(record_data, &len_record);
             int has_records = 0;
             
-            // Check if product exists in records
+            // check if product exists in records
             for(int i = 1; i < len_record; i++)  // Start from 1 to skip header
             {
                 if(strcmp(record_data[i][1], record.product_id) == 0)
@@ -671,40 +685,40 @@ void update_stock()
                 }
             }
 
-            // For new products (no records), only allow restock
+            // for new products (no records), only allow restock
             if(!has_records && choice != 1)
             {
                 printf("Error: New products can only be restocked first.\n");
                 continue;
             }
 
-            // Check current status of the product
+            // check current status of the product
             if(has_records)
             {
-                // Check most recent record for status
+                // check most recent record for status
                 for(int k = len_record - 1; k >= 1; k--)
                 {
                     if(strcmp(record_data[k][1], record.product_id) == 0)
                     {
-                        // Clean the status string before comparing
+                        // clean the status string before comparing
                         char clean_status[100];
                         strcpy(clean_status, record_data[k][4]);
                         clean_string(clean_status);
                         strcpy(current_status, clean_status);
                         
-                        // Only prevent restocking of discontinued products
+                        // only prevent restocking of discontinued products
                         if(strcmp(clean_status, "Discontinued") == 0 && choice == 1)
                         {
                             printf("\nError: Cannot restock discontinued product.\n");
                             return;
                         }
-                        break;  // Found most recent record, stop checking
+                        break;  // found most recent record, stop checking
                     }
                 }
             }
 
-            // If we get here, all validations passed
-            while ((ch = getchar()) != '\n' && ch != EOF); // Clear input buffer
+            // if we get here, all validations passed
+            while ((ch = getchar()) != '\n' && ch != EOF); // lear input buffer
             break;
         }
         
@@ -791,7 +805,7 @@ void remove_discontinued()
         sprintf(record.date, "%02d-%02d-%d", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
 
         //getting user input
-        printf("\nEnter the product id to discontinue (Axxx): ");
+        printf("\nEnter the product id to discontinue ([A/M/C])xxx: ");
         scanf("%s", record.product_id);
         
         // getting arr len for validation
@@ -839,7 +853,7 @@ void remove_discontinued()
                         if(strcmp(clean_status, "Discontinued") == 0)
                         {
                             is_discontinued = 1;
-                            printf("\nError: This product is already discontinued.\n");
+                            printf("\nThis product is already discontinued.\n");
                             return;
                         }
                         break;  // Found most recent record, stop checking
