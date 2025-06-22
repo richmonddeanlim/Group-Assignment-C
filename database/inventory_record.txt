@@ -25,7 +25,6 @@ Date,Product_Id,Action,Quantity,Status,User_Id,Username_Id
 26-06-2025,A001,Return,15,Active,user2
 28-06-2025,A001,Out,10,Active,user4
 30-06-2025,A001,Discontinue,0,Discontinued,user2
--- Below are newly added rows for C001 and M001 --
 03-07-2025,C001,Restock,15,Active,user1
 04-07-2025,C001,Out,5,Active,user2
 05-07-2025,C001,Return,3,Active,user3
