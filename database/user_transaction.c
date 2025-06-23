@@ -126,6 +126,7 @@ bool continueOrNo() {
         printf(">>>   ");
         scanf("%c",&selection);
         selection = tolower(selection);
+        while (getchar() != '\n');
         switch (selection) {
             case 'y':
                 return true;
@@ -157,7 +158,7 @@ void getValidInput(char* prompt, char* buffer, int maxLength) {
 void viewTransactions() {
     // Variable Declarations
     int filterType, actionChoice, statusChoice;
-    bool repeat = true, validAnswer = false;
+    bool repeat = true, validAnswer = false, validActionSelection = false, validStatusSelection = false;
     char inputUserID[50], inputAction[50], inputStatus[50], inputProductID[50], storedUsername[50];
     struct inventory_record inventoryRecord;
     
@@ -187,67 +188,85 @@ void viewTransactions() {
             fclose(file2);
         } while(validAnswer == false);
 
-
         printf("\n Would you like to filter transactions?\n");                            
         printf("1. ProductID\n");                                      // User is prompted to choose filters
         printf("2. Action\n");
         printf("3. Status\n");
         printf("4. No filters\n\n");
-        printf(">>>   ");
-        scanf("%d",&filterType);        // System receive the choice of filters
-        while (getchar() != '\n');
-        switch(filterType) {             
-            case 1:
-                printf("\nEnter ProductID to filter:\n");
-                getValidInput(">>>   ", inputProductID, sizeof(inputProductID));
-                break;
-            case 2:
-                printf("\nEnter Action to filter\n");
-                printf("1. Restock\n");
-                printf("2. Out\n");
-                printf("3. Discontinue\n");
-                printf("4. Return\n\n");
-                printf(">>>   ");
-                scanf("%d",&actionChoice);
-                switch(actionChoice) {
-                    case 1:
-                        strcpy(inputAction, "Restock");
-                        break;
-                    case 2:
-                        strcpy(inputAction, "Out");
-                        break;
-                    case 3:
-                        strcpy(inputAction, "Discontinue");
-                        break;
-                    case 4:
-                        strcpy(inputAction, "Return");
-                        break;
-                    default:
-                        printf("Invalid option entered. Please try again.");
+        validAnswer = false;
+        do {
+            validAnswer = false;
+            printf(">>>   ");
+            scanf("%d",&filterType);        // System receive the choice of filters
+            while (getchar() != '\n');
+            switch(filterType) {             
+                case 1:
+                    printf("\nEnter ProductID to filter:\n");
+                    getValidInput(">>>   ", inputProductID, sizeof(inputProductID));
+                    validAnswer = true;
+                    break;
+                case 2:
+                    printf("\nEnter Action to filter\n");
+                    printf("1. Restock\n");
+                    printf("2. Out\n");
+                    printf("3. Discontinue\n");
+                    printf("4. Return\n\n");
+                    do {
+                        validActionSelection = false;
+                        printf(">>>   ");
+                        scanf("%d",&actionChoice);
+                        switch(actionChoice) {
+                            case 1:
+                                strcpy(inputAction, "Restock");
+                                printf("Im working");
+                                validActionSelection = true;
+                                break;
+                            case 2:
+                                strcpy(inputAction, "Out");
+                                validActionSelection = true;
+                                break;
+                            case 3:
+                                strcpy(inputAction, "Discontinue");
+                                validActionSelection = true;
+                                break;
+                            case 4:
+                                strcpy(inputAction, "Return");
+                                validActionSelection = true;
+                                break;
+                            default:
+                                validActionSelection = false;
+                                printf("Invalid option entered. Please try again.\n\n");
+                        }
+                    } while (validActionSelection == false);
+                    validAnswer = true;
+                    break;
+                case 3:
+                    printf("\nEnter Status to filter\n");
+                    printf("1. Active\n");
+                    printf("2. Discontinued\n\n");
+                    printf(">>>   ");
+                    scanf("%d",&statusChoice);
+                    switch(statusChoice) {
+                        case 1:
+                            strcpy(inputStatus, "Active");
+                            break;
+                        case 2:
+                            strcpy(inputStatus,"Discontinued");
+                            break;
+                        default:
+                            printf("Invalid option entered. Please try again.");
+                    }
+                    validAnswer = true;
+                    break;
+                case 4:
+                    validAnswer = true;
+                    break;
+                default:
+                    printf("Invalid option entered. Please try again.\n");
+                    validAnswer = false;
                 }
-                break;
-            case 3:
-                printf("\nEnter Status to filter\n");
-                printf("1. Active\n");
-                printf("2. Discontinued\n\n");
-                printf(">>>   ");
-                scanf("%d",&statusChoice);
-                switch(statusChoice) {
-                    case 1:
-                        strcpy(inputStatus, "Active");
-                        break;
-                    case 2:
-                        strcpy(inputStatus,"Discontinued");
-                        break;
-                    default:
-                        printf("Invalid option entered. Please try again.");
-                }
-                break;
-            case 4:
-                break;
-            default:
-                printf("Invalid option entered. Please try again.");
-            }
+            } while (validAnswer == false);
+
         char line[256];
         fgets(line, sizeof(line), file);        // Remove header row for inventory_record.txt
 
@@ -282,7 +301,6 @@ void viewTransactions() {
         fclose(file);
         printf("\n");
         repeat = continueOrNo();
-        while (getchar() != '\n');
         printf("\n");
     }
 }
@@ -317,7 +335,6 @@ void viewArchive() {
         fclose(file);
         printf("\n");
         repeat = continueOrNo();
-        while (getchar() != '\n');
         printf("\n");
     } 
 }
