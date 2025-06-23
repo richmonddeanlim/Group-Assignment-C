@@ -7,6 +7,7 @@ void transactions();
 void getValidInput();
 void viewTransactions();
 bool continueOrNo();
+void viewArchive();
 
 // Inventory
 struct inventory_record {
