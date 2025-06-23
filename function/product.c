@@ -112,7 +112,6 @@ int findProductIndex(Product products[], int count, const char* id) {
     return -1;
 }
 
-// Add a new product with validation
 void addProduct() {
     Product products[MAX_PRODUCTS];
     int count = loadProducts(products);
@@ -152,6 +151,8 @@ void addProduct() {
 
     printf("Enter Category ID (1-Mobile, 2-Computer, 3-Accessory): ");
     scanf("%d", &p.category_id);
+    while (getchar() != '\n'); // Clear buffer
+
     if (p.category_id < 1 || p.category_id > 3) {
         printf("Invalid Category ID. Must be 1-4.\n");
         return;
@@ -159,6 +160,8 @@ void addProduct() {
 
     printf("Enter Supplier ID (1-TechSource, 2-GadgetMall, 3-PowerHouse): ");
     scanf("%d", &p.supplier_id);
+    while (getchar() != '\n'); // Clear buffer
+
     if (p.supplier_id < 1 || p.supplier_id > 3) {
         printf("Invalid Supplier ID. Must be 1-3.\n");
         return;
@@ -166,6 +169,8 @@ void addProduct() {
 
     printf("Enter Price: ");
     scanf("%f", &p.price);
+    while (getchar() != '\n'); // Clear buffer
+
     if (p.price <= 0) {
         printf("Price must be greater than 0.\n");
         return;
@@ -175,6 +180,7 @@ void addProduct() {
     saveProducts(products, count);
     printf(" Product added successfully.\n");
 }
+
 
 // View all products with readable category and supplier names
 void viewProducts() {
@@ -202,7 +208,6 @@ void viewProducts() {
     viewProductsWithLinkedList();
 }
 
-// Update product info by ID
 void updateProduct() {
     Product products[MAX_PRODUCTS];
     int count = loadProducts(products);
@@ -224,10 +229,15 @@ void updateProduct() {
 
     printf("Enter new Category ID: ");
     scanf("%d", &products[index].category_id);
+    while (getchar() != '\n'); // Clear buffer
+
     printf("Enter new Supplier ID: ");
     scanf("%d", &products[index].supplier_id);
+    while (getchar() != '\n'); // Clear buffer
+
     printf("Enter new Price: ");
     scanf("%f", &products[index].price);
+    while (getchar() != '\n'); // Clear buffer
 
     // Basic input validation
     if (strlen(products[index].name) == 0 ||
@@ -241,6 +251,7 @@ void updateProduct() {
     saveProducts(products, count);
     printf("Product updated.\n");
 }
+
 
 // Delete product by ID
 void deleteProduct() {
