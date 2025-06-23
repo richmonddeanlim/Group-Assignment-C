@@ -50,16 +50,17 @@ void role1Menu(int isAdmin) {
         border(default_border);
         printf("Current User: %s (Role: %s)\n", currentUser.username, currentUser.role);
         border(default_border);
-        printf("\n=== Core System and Product Management ===\n");
-        printf("1. Add New Product\n");
-        printf("2. Update Product Information\n");
-        printf("3. Delete Product\n");
-        printf("4. View Product Details\n");
+        printf("\n=== Product Management Menu ===\n");
+        printf("1. Add Product\n");
+        printf("2. View Products\n");
+        printf("3. Update Product\n");
+        printf("4. Delete Product\n");
+        printf("5. Search Product by Name\n");
         if (isAdmin) {
-            printf("5. Return to Main Menu\n");
+            printf("6. Return to Main Menu\n");
         } else {
-            printf("5. Logout\n");
-            printf("6. Exit\n");
+            printf("6. Logout\n");
+            printf("7. Exit\n");
         }
         
         getValidInput("Enter your choice: ", choiceStr, sizeof(choiceStr));
@@ -67,24 +68,33 @@ void role1Menu(int isAdmin) {
 
         switch (choice) {
             case 1:
-                printf("\nAdd New Product functionality will be implemented here\n");
+                addProduct();
                 system("pause");
+                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
                 break;
             case 2:
-                printf("\nUpdate Product Information functionality will be implemented here\n");
+                viewProducts();
                 system("pause");
+                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
                 break;
             case 3:
-                printf("\nDelete Product functionality will be implemented here\n");
+                updateProduct();
                 system("pause");
+                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
                 break;
             case 4:
-                printf("\nView Product Details functionality will be implemented here\n");
+                deleteProduct();
                 system("pause");
+                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
                 break;
             case 5:
-                return;
+                searchProductByName();
+                system("pause");
+                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
+                break;
             case 6:
+                return;
+            case 7:
                 if (!isAdmin) {
                     printf("\nThank you for using the system. Goodbye!\n");
                     exit(0);
