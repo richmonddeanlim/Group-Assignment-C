@@ -11,12 +11,29 @@
 #define Max_users 100
 #define default_border 60
 
+#define MAX_PRODUCTS 100
+#define MAX_NAME 50
+#define PRODUCT_FILE "database/product.txt"
+
 // Staff and Product
 typedef struct {
     char username[50];
     char password[50];
     char role[20];
 } Staff;
+
+typedef struct {
+    char id[10];                // e.g., A001
+    char name[MAX_NAME];       // Product name
+    int category_id;           // Integer ID linked to categories
+    int supplier_id;           // Integer ID linked to suppliers
+    float price;               // Product price
+} Product;
+
+typedef struct ProductNode {
+    Product data;
+    struct ProductNode* next;
+} ProductNode;
 
 // Inventory
 struct inventory_record {
@@ -64,6 +81,17 @@ void role4Menu(int isAdmin);
 void adminMenu();
 void clearScreen();
 void clearInputBuffer();
+
+// --- Product Management ---
+void addProduct();
+void viewProducts();
+void updateProduct();
+void deleteProduct();
+void searchProductByName();
+int loadProducts(Product products[]);
+void saveProducts(Product products[], int count);
+int findProductIndex(Product products[], int count, const char* id);
+void viewProductsWithLinkedList();
 
 // --- Inventory Management ---
 void add_record();

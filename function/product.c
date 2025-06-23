@@ -2,13 +2,13 @@
 #include <stdlib.h>     // For malloc, free, etc.
 #include <string.h>     // String manipulation functions
 #include <ctype.h>      // Character handling functions
-#include "product.h"    // Header file with struct definitions and constants
+#include "../header/inventory_system.h"    // Header file with struct definitions and constants
 
 // Get category name from ID by reading category.txt
 const char* getCategoryName(int id) {
     static char line[150];
     static char name[50];
-    FILE* fp = fopen("category.txt", "r");
+    FILE* fp = fopen("database/category.txt", "r");
     if (!fp) {
         return "Unknown Category";
     }
@@ -37,7 +37,7 @@ const char* getCategoryName(int id) {
 const char* getSupplierName(int id) {
     static char line[200];
     static char name[50];
-    FILE* fp = fopen("supplier.txt", "r");
+    FILE* fp = fopen("database/supplier.txt", "r");
     if (!fp) {
         return "Unknown Supplier";
     }
@@ -123,7 +123,6 @@ void addProduct() {
     }
 
     Product p;
-    getchar(); // Clear leftover newline
 
     printf("Enter Product ID (e.g., A001): ");
     fgets(p.id, sizeof(p.id), stdin);
@@ -209,7 +208,6 @@ void updateProduct() {
     int count = loadProducts(products);
 
     char id[10];
-    getchar();
     printf("Enter Product ID to update: ");
     fgets(id, sizeof(id), stdin);
     id[strcspn(id, "\n")] = '\0';
@@ -250,7 +248,6 @@ void deleteProduct() {
     int count = loadProducts(products);
 
     char id[10];
-    getchar();
     printf("Enter Product ID to delete: ");
     fgets(id, sizeof(id), stdin);
     id[strcspn(id, "\n")] = '\0';
@@ -315,7 +312,6 @@ void viewProductsWithLinkedList() {
 void searchProductByName() {
     char search[MAX_NAME];
     printf("Enter keyword to search: ");
-    getchar();
     fgets(search, MAX_NAME, stdin);
     search[strcspn(search, "\n")] = '\0';
 
