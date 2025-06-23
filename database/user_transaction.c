@@ -156,8 +156,8 @@ void getValidInput(char* prompt, char* buffer, int maxLength) {
 void viewTransactions() {
     // Variable Declarations
     int filterType, actionChoice, statusChoice;
-    bool repeat = true, validAnswer = false, validActionSelection = false, validStatusSelection = false;
-    char inputUserID[50], inputAction[50], inputStatus[50], inputProductID[50], storedUsername[50];
+    bool repeat = true, validAnswer = false, validActionSelection = false, validStatusSelection = false, productIDFound = false;
+    char inputUserID[50], inputAction[50], inputStatus[50], inputProductID[50], storedUserID[50], storedProductID[50];
     struct inventory_record inventoryRecord;
     
     while (getchar() != '\n');
@@ -165,6 +165,7 @@ void viewTransactions() {
         FILE *file = fopen(recordFilepath, "r");
         
         char credentialLine[256];
+        char productLine[256];
 
         do {
             FILE *file2 = fopen(credentialFilepath, "r");
@@ -172,9 +173,9 @@ void viewTransactions() {
             getValidInput("Enter User ID to filter: ", inputUserID, sizeof(inputUserID));     // User enter UserID to check
             
             while (fgets(credentialLine, sizeof(credentialLine), file2)) {
-                sscanf(credentialLine, "%49[^,]",storedUsername);
-                storedUsername[strcspn(storedUsername, "\r\n")] = 0;
-                if (strcmp(inputUserID, storedUsername) == 0) {
+                sscanf(credentialLine, "%49[^,]",storedUserID);
+                storedUserID[strcspn(storedUserID, "\r\n")] = 0;
+                if (strcmp(inputUserID, storedUserID) == 0) {
                     validAnswer = true;
                     printf("");
                     break;
@@ -202,8 +203,24 @@ void viewTransactions() {
             switch(filterType) {             
                 case 1:
                     printf("%s",menutext);
-                    printf("Enter ProductID to filter:\n");
-                    getValidInput(">>>   ", inputProductID, sizeof(inputProductID));
+                    do {
+                        FILE *file3 = fopen(productFilepath,"r");
+                        printf("Enter ProductID to filter:\n");
+                        getValidInput(">>>   ", inputProductID, sizeof(inputProductID));
+                        while (fgets(productLine, sizeof(productLine), file3)) {
+                            sscanf(productLine, "%49[^,]",storedProductID);
+                            storedProductID[strcspn(storedProductID, "\r\n")] = 0;
+                            if (strcmp(inputProductID, storedProductID) == 0) {
+                                productIDFound = true;
+                                printf("");
+                                break;
+                            }
+                        }
+                        if (productIDFound == false) {
+                            printf("Product ID: %s not found. Please try again.\n\n",inputProductID); 
+                        }
+                        fclose(file3);
+                    } while (productIDFound == false);
                     validAnswer = true;
                     break;
                 case 2:
