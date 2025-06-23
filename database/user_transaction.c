@@ -5,7 +5,9 @@
 #include <ctype.h>
 
 FILE *recordFile;
+FILE *credentialFile;
 char *recordFilepath = "inventory_record.txt";
+char *credentialFilepath = "staff_credentials.txt";
 
 int main() {
     int selection;
@@ -116,20 +118,27 @@ void transactions() {
 }
 
 bool continueOrNo() {
+    bool validAnswer;
     char selection;
     printf("Would you like to continue? (Y/N)\n");
-    printf(">>>   ");
-    scanf("%c",&selection);
-    selection = tolower(selection);
-    switch (selection) {
-        case 'y':
-            return true;
-            break;
-        case 'n':
-           return false;
-           break;
-    }
+    do {
+        validAnswer = false;
+        printf(">>>   ");
+        scanf("%c",&selection);
+        selection = tolower(selection);
+        switch (selection) {
+            case 'y':
+                return true;
+                break;
+            case 'n':
+                return false;
+                break;
+            default:
+                printf("\nInvalid answer. Please try again.\n");
+        }
+    } while (validAnswer == false);
 }
+
 
 void getValidInput(char* prompt, char* buffer, int maxLength) {
     do {
@@ -149,13 +158,36 @@ void viewTransactions() {
     // Variable Declarations
     int filterType, actionChoice, statusChoice;
     bool repeat = true, validAnswer = false;
-    char inputUserID[50], inputAction[50], inputStatus[50], inputProductID[50];
+    char inputUserID[50], inputAction[50], inputStatus[50], inputProductID[50], storedUsername[50];
     struct inventory_record inventoryRecord;
     
     while (getchar() != '\n');
     while (repeat == true) {        
         FILE *file = fopen(recordFilepath, "r");
-        getValidInput("Enter User ID to filter: ", inputUserID, sizeof(inputUserID));     // User enter UserID to check
+        
+        char credentialLine[256];
+
+        do {
+            FILE *file2 = fopen(credentialFilepath, "r");
+            validAnswer = false;
+            getValidInput("Enter User ID to filter: ", inputUserID, sizeof(inputUserID));     // User enter UserID to check
+            
+            while (fgets(credentialLine, sizeof(credentialLine), file2)) {
+                sscanf(credentialLine, "%49[^,]",storedUsername);
+                storedUsername[strcspn(storedUsername, "\r\n")] = 0;
+                if (strcmp(inputUserID, storedUsername) == 0) {
+                    validAnswer = true;
+                    printf("");
+                    break;
+                }
+            }
+            if (validAnswer == false) {
+                printf("User ID: %s not found. Please try again.\n\n",inputUserID); 
+            }
+            fclose(file2);
+        } while(validAnswer == false);
+
+
         printf("\n Would you like to filter transactions?\n");                            
         printf("1. ProductID\n");                                      // User is prompted to choose filters
         printf("2. Action\n");
@@ -211,12 +243,13 @@ void viewTransactions() {
                         printf("Invalid option entered. Please try again.");
                 }
                 break;
+            case 4:
+                break;
             default:
                 printf("Invalid option entered. Please try again.");
             }
-
         char line[256];
-        fgets(line, sizeof(line), file);
+        fgets(line, sizeof(line), file);        // Remove header row for inventory_record.txt
 
         printf("\n\nShowing transaction history for user: %s\n",inputUserID);
         printf("%-12s %-10s %-12s %-8s %-12s\n", "------------", "----------", "------------", "--------", "------------");
@@ -245,12 +278,12 @@ void viewTransactions() {
                 printf("%-12s %-10s %-12s %-8d %-12s\n", inventoryRecord.date, inventoryRecord.product_id, inventoryRecord.action, inventoryRecord.quantity, inventoryRecord.status);
                 }
             }
+        }
         fclose(file);
         printf("\n");
         repeat = continueOrNo();
         while (getchar() != '\n');
         printf("\n");
-        }
     }
 }
 
