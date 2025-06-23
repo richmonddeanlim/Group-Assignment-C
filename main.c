@@ -70,27 +70,22 @@ void role1Menu(int isAdmin) {
             case 1:
                 addProduct();
                 system("pause");
-                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
                 break;
             case 2:
                 viewProducts();
                 system("pause");
-                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
                 break;
             case 3:
                 updateProduct();
                 system("pause");
-                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
                 break;
             case 4:
                 deleteProduct();
                 system("pause");
-                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
                 break;
             case 5:
                 searchProductByName();
                 system("pause");
-                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
                 break;
             case 6:
                 return;
