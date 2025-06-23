@@ -1,13 +1,11 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
 #include "transactions.h"
-#include <ctype.h>
 
+FILE *productFile;
 FILE *recordFile;
 FILE *credentialFile;
 char *recordFilepath = "inventory_record.txt";
 char *credentialFilepath = "staff_credentials.txt";
+char *productFilepath = "product.txt";
 
 int main() {
     int selection;
@@ -188,25 +186,29 @@ void viewTransactions() {
             fclose(file2);
         } while(validAnswer == false);
 
-        printf("\n Would you like to filter transactions?\n");                            
-        printf("1. ProductID\n");                                      // User is prompted to choose filters
-        printf("2. Action\n");
-        printf("3. Status\n");
-        printf("4. No filters\n\n");
-        validAnswer = false;
+
         do {
+            printf("%s",menutext);
+            printf("User selected: %s\n\n",inputUserID);
+            printf("Would you like to filter transactions?\n");                            
+            printf("1. ProductID\n");                                      // User is prompted to choose filters
+            printf("2. Action\n");
+            printf("3. Status\n");
+            printf("4. No filters\n\n");
             validAnswer = false;
             printf(">>>   ");
             scanf("%d",&filterType);        // System receive the choice of filters
             while (getchar() != '\n');
             switch(filterType) {             
                 case 1:
-                    printf("\nEnter ProductID to filter:\n");
+                    printf("%s",menutext);
+                    printf("Enter ProductID to filter:\n");
                     getValidInput(">>>   ", inputProductID, sizeof(inputProductID));
                     validAnswer = true;
                     break;
                 case 2:
-                    printf("\nEnter Action to filter\n");
+                    printf("%s",menutext);
+                    printf("Enter Action to filter\n\n");
                     printf("1. Restock\n");
                     printf("2. Out\n");
                     printf("3. Discontinue\n");
@@ -241,22 +243,34 @@ void viewTransactions() {
                     validAnswer = true;
                     break;
                 case 3:
-                    printf("\nEnter Status to filter\n");
+                    printf("%s",menutext);
+                    printf("Enter Status to filter\n\n");
                     printf("1. Active\n");
-                    printf("2. Discontinued\n\n");
-                    printf(">>>   ");
-                    scanf("%d",&statusChoice);
-                    switch(statusChoice) {
-                        case 1:
-                            strcpy(inputStatus, "Active");
-                            break;
-                        case 2:
-                            strcpy(inputStatus,"Discontinued");
-                            break;
-                        default:
-                            printf("Invalid option entered. Please try again.");
-                    }
-                    validAnswer = true;
+                    printf("2. Discontinued\n");
+                    printf("3. Back\n\n");
+                    do {
+                        validStatusSelection = false;
+                        printf(">>>   ");
+                        scanf("%d",&statusChoice);
+                        switch(statusChoice) {
+                            case 1:
+                                strcpy(inputStatus, "Active");
+                                validStatusSelection = true;
+                                validAnswer = true;
+                                break;
+                            case 2:
+                                strcpy(inputStatus,"Discontinued");
+                                validStatusSelection = true;
+                                validAnswer = true;
+                                break;
+                            case 3:
+                                validStatusSelection = true;
+                                validAnswer = false;
+                                break;
+                            default:
+                                printf("Invalid option entered. Please try again.\n\n");
+                        }
+                    } while (validStatusSelection == false);
                     break;
                 case 4:
                     validAnswer = true;
@@ -270,7 +284,8 @@ void viewTransactions() {
         char line[256];
         fgets(line, sizeof(line), file);        // Remove header row for inventory_record.txt
 
-        printf("\n\nShowing transaction history for user: %s\n",inputUserID);
+        printf("\n%s",menutext);
+        printf("Showing transaction history for user: %s\n",inputUserID);
         printf("%-12s %-10s %-12s %-8s %-12s\n", "------------", "----------", "------------", "--------", "------------");
         printf("%-12s %-10s %-12s %-8s %-12s\n", "Date", "ProductID", "Action", "Quantity", "Status");
         printf("%-12s %-10s %-12s %-8s %-12s\n", "------------", "----------", "------------", "--------", "------------");

@@ -1,6 +1,9 @@
 const char *menutext = "\n--- User and Transaction Management System ---\n\n";
 
-#define InventoryFile "inventory_record.txt"
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+#include <ctype.h>
 
 void user();
 void transactions();
@@ -8,6 +11,7 @@ void getValidInput();
 void viewTransactions();
 bool continueOrNo();
 void viewArchive();
+
 
 // Inventory
 struct inventory_record {
