@@ -321,7 +321,7 @@ void displayMainMenu() {
                     role3Menu(1);  // Pass 1 for admin
                     break;
                 case 4:
-                    role4Menu(1);  // Pass 1 for admin
+                    test_mains();  // Pass 1 for admin
                     break;
                 case 5:
                     adminMenu();
