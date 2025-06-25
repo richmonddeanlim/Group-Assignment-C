@@ -52,8 +52,6 @@ struct inventory_item {
     char product_status[50];
 };
 
-// Global Variables
-
 // Staff
 extern Staff users[Max_users];
 extern int userCount;

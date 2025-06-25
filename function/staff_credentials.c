@@ -3,7 +3,6 @@
 // File path constant
 const char* credentials = "database/staff_credentials.txt";
 
-// Global variables
 Staff users[Max_users];
 int userCount = 0;
 Staff currentUser;
