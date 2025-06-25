@@ -42,6 +42,7 @@ struct inventory_record {
     char action[50];
     int quantity;
     char status[50];
+    char userID[10];
 };
 
 struct inventory_item {
