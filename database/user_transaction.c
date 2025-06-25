@@ -1,4 +1,5 @@
-#include "transactions.h"
+#include "../header/transactions.h"
+#include "../header/inventory_system.h"
 
 FILE *productFile;
 FILE *recordFile;
