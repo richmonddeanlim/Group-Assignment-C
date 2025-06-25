@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "decoration.h": "c"
+        "decoration.h": "c",
+        "ctype.h": "c",
+        "transactions.h": "c"
     }
 }

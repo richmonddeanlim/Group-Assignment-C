@@ -42,6 +42,7 @@ struct inventory_record {
     char action[50];
     int quantity;
     char status[50];
+    char userID[10];
 };
 
 struct inventory_item {
@@ -51,8 +52,6 @@ struct inventory_item {
     char stock_status[50];
     char product_status[50];
 };
-
-// Global Variables
 
 // Staff
 extern Staff users[Max_users];
