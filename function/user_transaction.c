@@ -6,8 +6,10 @@ FILE *credentialFile;
 char *recordFilepath = "../database/inventory_record.txt";
 char *credentialFilepath = "../database/staff_credentials.txt";
 char *productFilepath = "../database/product.txt";
+// Testing
+const char* menutext = "\n--- User and Transaction Management System ---\n\n";
 
-int main() {
+void test_mains() {
     int selection;
     while (true) {
         printf("%s",menutext);

@@ -1,7 +1,7 @@
 #include "../header/inventory_system.h"
 
 // File path constant
-const char* credentials = "../database/staff_credentials.txt";
+const char* credentials = "database/staff_credentials.txt";
 
 Staff users[Max_users];
 int userCount = 0;

@@ -113,17 +113,16 @@ void data_record(char data[100][100][100], int *line_array);
 void border(int num);
 void add_space(int num);
 
-// Testing
-const char *menutext = "\n--- User and Transaction Management System ---\n\n";
+
 
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 
+void test_mains();
 void user();
 void transactions();
-void getValidInput();
 void viewTransactions();
 bool continueOrNo();
 void viewArchive();
