@@ -346,7 +346,7 @@ void displayMainMenu() {
                 role3Menu(0);  // Pass 0 for non-admin
                 return;
             } else if (strcmp(currentUser.role, "transaction_manager") == 0) {
-                test_mains;  // Pass 0 for non-admin
+                test_mains();  // Pass 0 for non-admin
                 return;
             }
         }
