@@ -3,6 +3,7 @@
         "decoration.h": "c",
         "ctype.h": "c",
         "transactions.h": "c",
-        "inventory_system.h": "c"
+        "inventory_system.h": "c",
+        "string.h": "c"
     }
 }

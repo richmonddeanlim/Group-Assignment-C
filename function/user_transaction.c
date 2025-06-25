@@ -1,6 +1,4 @@
 #include "../header/inventory_system.h"
-#include "../header/transactions.h"
-#include "staff_credentials.c"
 
 FILE *productFile;
 FILE *recordFile;
