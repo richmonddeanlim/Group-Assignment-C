@@ -1,12 +1,11 @@
 #include "../header/inventory_system.h"
-#include "../header/transactions.h"
 
 FILE *productFile;
 FILE *recordFile;
 FILE *credentialFile;
-char *recordFilepath = "inventory_record.txt";
-char *credentialFilepath = "staff_credentials.txt";
-char *productFilepath = "product.txt";
+char *recordFilepath = "../database/inventory_record.txt";
+char *credentialFilepath = "../database/staff_credentials.txt";
+char *productFilepath = "../database/product.txt";
 
 int main() {
     int selection;
@@ -52,24 +51,38 @@ void user() {
         int selection;
         printf("%s",menutext);
         printf("1. Add new user\n");
-        printf("2. Update user information\n");
+        printf("2. Change user password\n");
         printf("3. Delete user account\n");
-        printf("4. View user details\n");
+        printf("4. View all user details\n");
         printf("5. Back to main menu\n\n");;
         while (validAnswer == false) {
             printf(">>>   ");
             scanf("%d",&selection);
+            while (getchar() != '\n');
             switch (selection) {
                 case 1:
+                    addUser();
                     validAnswer = true;
                     break;
                 case 2:
+                    changePassword();
                     validAnswer = true;
                     break;
                 case 3:
+                    deleteUser();
                     validAnswer = true;
                     break;
                 case 4:
+                    printf("\n=== All Staff Members ===\n");
+                    printf("+------------------+---------------------+\n");
+                    printf("| %-16s | %-19s |\n", "Username", "Role");
+                    printf("+------------------+---------------------+\n");
+                    for (int i = 0; i < userCount; i++) {
+                        printf("| %-16s | %-19s |\n", users[i].username, users[i].role);
+                    }
+                    printf("+------------------+---------------------+\n");
+                    printf("\nTotal Staff Members: %d\n", userCount);
+                    system("pause");
                     validAnswer = true;
                     break;
                 case 5:
@@ -106,7 +119,7 @@ void transactions() {
                     break; 
                 case 3:
                     validAnswer = true;
-                    break;   
+                    return;
                 default:
                     printf("\nInvalid choice. Please try again.\n");
                     while (getchar() != '\n');
@@ -137,21 +150,6 @@ bool continueOrNo() {
                 printf("\nInvalid answer. Please try again.\n");
         }
     } while (validAnswer == false);
-}
-
-
-void getValidInput(char* prompt, char* buffer, int maxLength) {
-    do {
-        printf("%s", prompt);
-        fgets(buffer, maxLength, stdin);
-        buffer[strcspn(buffer, "\n")] = 0; 
-        
-        if (strlen(buffer) == 0) {
-            printf("\nInput cannot be empty! Please try again.\n");
-            continue;
-        }
-        break;
-    } while (1);
 }
 
 void viewTransactions() {
@@ -235,10 +233,10 @@ void viewTransactions() {
                         validActionSelection = false;
                         printf(">>>   ");
                         scanf("%d",&actionChoice);
+                        while (getchar() != '\n');
                         switch(actionChoice) {
                             case 1:
                                 strcpy(inputAction, "Restock");
-                                printf("Im working");
                                 validActionSelection = true;
                                 break;
                             case 2:
@@ -270,6 +268,7 @@ void viewTransactions() {
                         validStatusSelection = false;
                         printf(">>>   ");
                         scanf("%d",&statusChoice);
+                        while (getchar() != '\n');
                         switch(statusChoice) {
                             case 1:
                                 strcpy(inputStatus, "Active");
