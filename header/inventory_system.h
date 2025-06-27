@@ -114,4 +114,18 @@ void border(int num);
 void add_space(int num);
 
 
+
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+#include <ctype.h>
+
+void test_mains();
+void user();
+void transactions();
+void viewTransactions();
+bool continueOrNo();
+void viewArchive();
+
+
 #endif

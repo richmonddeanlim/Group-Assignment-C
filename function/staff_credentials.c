@@ -144,7 +144,7 @@ void addUser() {
     // Save to file
     FILE *file = fopen(credentials, "a");
     if (file == NULL) {
-        printf("\nError saving staff member to file!\n");
+        perror("\nError saving staff member to file!\n");
         system("pause");
         return;
     }
