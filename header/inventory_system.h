@@ -30,6 +30,7 @@ typedef struct {
     float price;               // Product price
 } Product;
 
+// Linked list node structure for shared responsibility
 typedef struct ProductNode {
     Product data;
     struct ProductNode* next;
