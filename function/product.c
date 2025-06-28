@@ -112,6 +112,38 @@ int findProductIndex(Product products[], int count, const char* id) {
     return -1;
 }
 
+// Check if category ID exists in category.txt
+int isValidCategoryID(int id) {
+    FILE* fp = fopen("database/category.txt", "r");
+    if (!fp) return 0;
+    int fileId;
+    char name[50], desc[100];
+    while (fscanf(fp, "%d,%49[^,],%99[^\n]", &fileId, name, desc) == 3) {
+        if (fileId == id) {
+            fclose(fp);
+            return 1;
+        }
+    }
+    fclose(fp);
+    return 0;
+}
+
+// Check if supplier ID exists in supplier.txt
+int isValidSupplierID(int id) {
+    FILE* fp = fopen("database/supplier.txt", "r");
+    if (!fp) return 0;
+    int fileId;
+    char name[50], contact[30], email[50];
+    while (fscanf(fp, "%d,%49[^,],%29[^,],%49[^\n]", &fileId, name, contact, email) == 4) {
+        if (fileId == id) {
+            fclose(fp);
+            return 1;
+        }
+    }
+    fclose(fp);
+    return 0;
+}
+
 void addProduct() {
     Product products[MAX_PRODUCTS];
     int count = loadProducts(products);
@@ -149,21 +181,22 @@ void addProduct() {
         return;
     }
 
-    printf("Enter Category ID (1-Mobile, 2-Computer, 3-Accessory): ");
+    
+    printf("Enter Category ID (e.g.1-Mobile, 2-Computer, 3-Accessory): ");
     scanf("%d", &p.category_id);
-    while (getchar() != '\n'); // Clear buffer
-
-    if (p.category_id < 1 || p.category_id > 3) {
-        printf("Invalid Category ID. Must be 1-4.\n");
+    while (getchar() != '\n'); // clear buffer
+    
+    if (!isValidCategoryID(p.category_id)) {
+        printf("Invalid Category ID. Please enter a valid ID listed in category.txt.\n");
         return;
     }
-
-    printf("Enter Supplier ID (1-TechSource, 2-GadgetMall, 3-PowerHouse): ");
+    
+    printf("Enter Supplier ID (e.g. 1-TechSource, 2-GadgetMall, 3-PowerHouse): ");
     scanf("%d", &p.supplier_id);
-    while (getchar() != '\n'); // Clear buffer
+    while (getchar() != '\n'); // clear buffer
 
-    if (p.supplier_id < 1 || p.supplier_id > 3) {
-        printf("Invalid Supplier ID. Must be 1-3.\n");
+    if (!isValidSupplierID(p.supplier_id)) {
+        printf("Invalid Supplier ID. Please enter a valid ID listed in supplier.txt.\n");
         return;
     }
 
