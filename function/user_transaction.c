@@ -9,48 +9,11 @@ char *productFilepath = "../database/product.txt";
 // Testing
 const char* menutext = "\n--- User and Transaction Management System ---\n\n";
 
-void role4_Menu() {
-    int selection;
-    while (true) {
-        printf("%s",menutext);
-        printf("Welcome to User and Transaction Management System!\n\n");
-        printf("1. Modify users\n");
-        printf("2. Modify transaction records\n");
-        printf("3. Log out\n\n");
-        bool validAnswer = false;
-        while (validAnswer == false) {
-            printf(">>>   ");
-            scanf("%d",&selection);
-            switch (selection) {
-                case 1:
-                    validAnswer = true; 
-                    user();   
-                    break;
-                case 2:
-                    validAnswer = true;  
-                    transactions();
-                    break;
-                case 3:
-                    validAnswer = true;
-                    break;
-                default:
-                    printf("\nInvalid choice. Please try again.\n");
-                    break;
-            }
-        }
-        if (selection == 3) {
-            break;
-        }
-    }
-    printf("%s",menutext);
-    while (getchar() != '\n');
-    printf("You have succesfully logged out.\n\n"); 
-}
-
 void user() {
     while (true) {
         bool validAnswer = false;
         int selection;
+        clearScreen();
         printf("%s",menutext);
         printf("1. Add new user\n");
         printf("2. Change user password\n");
@@ -63,18 +26,22 @@ void user() {
             while (getchar() != '\n');
             switch (selection) {
                 case 1:
+                    clearScreen();
                     addUser();
                     validAnswer = true;
                     break;
                 case 2:
+                    clearScreen();
                     changePassword();
                     validAnswer = true;
                     break;
                 case 3:
+                    clearScreen();
                     deleteUser();
                     validAnswer = true;
                     break;
                 case 4:
+                    clearScreen();
                     printf("\n=== All Staff Members ===\n");
                     printf("+------------------+---------------------+\n");
                     printf("| %-16s | %-19s |\n", "Username", "Role");

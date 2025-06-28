@@ -6,6 +6,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include <stdbool.h>
 
 #define MAX_LINE_LENGTH 256
 #define Max_users 100
@@ -76,7 +77,7 @@ void displayMainMenu();
 void role1Menu(int isAdmin);
 void role2Menu(int isAdmin);
 void role3Menu(int isAdmin);
-void role4Menu(int isAdmin);
+void role4_Menu(int isAdmin);
 void adminMenu();
 void clearScreen();
 void clearInputBuffer();
@@ -98,6 +99,13 @@ void update_stock();
 void remove_discontinued();
 void view_record();
 
+// --- User and Transaction Management ---
+void user();
+void transactions();
+void viewTransactions();
+bool continueOrNo();
+void viewArchive();
+
 // --- Validation Utilities ---
 void option_validation(char *input_text, int *choice, int range);
 void integer_valdiation(char *input_text, int *user_input);
@@ -112,20 +120,6 @@ void data_record(char data[100][100][100], int *line_array);
 // --- Decoration Functions ---
 void border(int num);
 void add_space(int num);
-
-
-
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
-#include <ctype.h>
-
-void role4_Menu();
-void user();
-void transactions();
-void viewTransactions();
-bool continueOrNo();
-void viewArchive();
 
 
 #endif
