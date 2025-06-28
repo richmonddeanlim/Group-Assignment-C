@@ -149,7 +149,6 @@ void role2Menu(int isAdmin) {
                 break;
             case 4:
                 view_record();
-                system("pause");
                 while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
                 break;
             case 5:
@@ -332,7 +331,6 @@ void displayMainMenu() {
                 return;
             }
         }
-        system("pause");
     } while (1);
 }
 

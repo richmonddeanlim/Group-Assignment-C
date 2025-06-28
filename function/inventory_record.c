@@ -356,7 +356,6 @@ void add_record()
         fclose(file_record);
 
         // display sucessfull notification
-            system("cls");
         printf("\nStock recorded successfully!\n");
         printf("----------------------------------------\n");
         printf("Date: %s\n", record.date);
@@ -393,8 +392,6 @@ void view_record()
     int view_choice;
     option_validation("Enter your choice: ", &view_choice, 4);
     
-    system("cls");
-
     if (view_choice == 4) {
         return;  // Return to main menu
     }
@@ -769,7 +766,6 @@ void update_stock()
     // Close the file
     fclose(file_record);
 
-    system("cls");
     printf("\nStock update recorded successfully!\n");
     printf("----------------------------------------\n");
     printf("Date: %s\n", record.date);
