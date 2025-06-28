@@ -197,12 +197,14 @@ void viewProducts() {
     printf("-------------------------------------------------------------------------------------------\n");
 
     for (int i = 0; i < count; i++) {
-        printf("%s\t%s\t\t%s\t\t%s\t\tRM%.2f\n",
-                products[i].id,
-                products[i].name,
-                getCategoryName(products[i].category_id),
-                getSupplierName(products[i].supplier_id),
-                products[i].price);
+        printf("%-8s %-25s %-18s %-18s RM%8.2f\n",
+            products[i].id,
+            products[i].name,
+            getCategoryName(products[i].category_id),
+            getSupplierName(products[i].supplier_id),
+            products[i].price);
+        
+
     }
 
     viewProductsWithLinkedList();
