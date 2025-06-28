@@ -120,7 +120,7 @@ void add_space(int num);
 #include <string.h>
 #include <ctype.h>
 
-void test_mains();
+void role4_Menu();
 void user();
 void transactions();
 void viewTransactions();

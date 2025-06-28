@@ -321,7 +321,7 @@ void displayMainMenu() {
                     role3Menu(1);  // Pass 1 for admin
                     break;
                 case 4:
-                    test_mains();  // Pass 1 for admin
+                    role4_Menu();  // Pass 1 for admin
                     break;
                 case 5:
                     adminMenu();
@@ -346,7 +346,7 @@ void displayMainMenu() {
                 role3Menu(0);  // Pass 0 for non-admin
                 return;
             } else if (strcmp(currentUser.role, "transaction_manager") == 0) {
-                test_mains();  // Pass 0 for non-admin
+                role4_Menu();  // Pass 0 for non-admin
                 return;
             }
         }

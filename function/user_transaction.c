@@ -9,7 +9,7 @@ char *productFilepath = "../database/product.txt";
 // Testing
 const char* menutext = "\n--- User and Transaction Management System ---\n\n";
 
-void test_mains() {
+void role4_Menu() {
     int selection;
     while (true) {
         printf("%s",menutext);
