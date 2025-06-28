@@ -1,6 +1,5 @@
 #include "../header/inventory_system.h"
 
-// Global Variable Definitions
 FILE *file_product;
 FILE *file_record;
 char product_location[] = "database/product.txt";
@@ -74,9 +73,24 @@ void str_lower(char *str) {
     }
 }
 
-// retrieving data inside teh product txt
+// Function to clean string by removing whitespace and null characters
+void clean_string(char *str) {
+    int i = 0, j = 0;
+    while (str[i]) {
+        if (str[i] != ' ' && str[i] != '\n' && str[i] != '\r' && str[i] != '\t') {
+            str[j] = str[i];
+            j++;
+        }
+        i++;
+    }
+    str[j] = '\0';
+}
+
+// retrieving data inside the product txt
 void data_product(char data[100][100][100], int *line_array)
 {
+    char product_location[] = "database/product.txt";
+
     FILE *file_product = fopen(product_location, "r");
 
     if(file_product == NULL) {
@@ -136,22 +150,13 @@ void data_record(char data[100][100][100], int *line_array)
     *line_array = line;
 }
 
-// Function to clean string by removing whitespace and null characters
-void clean_string(char *str) {
-    int i = 0, j = 0;
-    while (str[i]) {
-        if (str[i] != ' ' && str[i] != '\n' && str[i] != '\r' && str[i] != '\t') {
-            str[j] = str[i];
-            j++;
-        }
-        i++;
-    }
-    str[j] = '\0';
-}
-
 // function adding new record for inventory
 void add_record()               
 {
+    FILE *file_record;
+    char record_location[] = "database/inventory_record.txt";
+
+
     struct inventory_record record;
     char ch;
     char condition;
@@ -345,7 +350,7 @@ void add_record()
         }
 
         // write the record into the text file
-        fprintf(file_record, "%s,%s,%s,%d,Active\n", record.date, record.product_id,record.action, record.quantity);
+        fprintf(file_record, "%s,%s,%s,%d,Active,%s\n", record.date, record.product_id,record.action, record.quantity, currentUser.username);
 
         // close the txt file
         fclose(file_record);
@@ -358,6 +363,7 @@ void add_record()
         printf("Product ID: %s\n", record.product_id);
         printf("Action: %s\n", record.action);
         printf("Quantity: %d\n", record.quantity);
+        printf("Status: Active\n");
         printf("----------------------------------------\n");
 
 
@@ -602,6 +608,8 @@ void view_record()
 // update stock level
 void update_stock()
 {
+    char record_location[] = "database/inventory_record.txt";
+
     struct inventory_record record;
     char ch;
     int len_product = 0;
@@ -755,12 +763,8 @@ void update_stock()
     }
 
     // Add new record with all information
-    fprintf(file_record, "%s,%s,%s,%d,%s\n", 
-            record.date, 
-            record.product_id,
-            record.action,
-            record.quantity,
-            current_status);  // Use the current status
+    fprintf(file_record, "%s,%s,%s,%d,%s,%s\n", record.date, record.product_id,record.action,
+            record.quantity,current_status, currentUser.username);
 
     // Close the file
     fclose(file_record);
@@ -779,6 +783,9 @@ void update_stock()
 // remove or dfeltge the discontinued item
 void remove_discontinued()
 {
+    char record_location[] = "database/inventory_record.txt";
+
+
     struct inventory_record record;
     char ch;
     int len_product = 0;
@@ -885,7 +892,8 @@ void remove_discontinued()
     // Add new record with Discontinued status
     fprintf(file_record, "%s,%s,Discontinue,0,Discontinued\n", 
             record.date, 
-            record.product_id);
+            record.product_id,
+            currentUser.username);
 
     // Close the file
     fclose(file_record);
