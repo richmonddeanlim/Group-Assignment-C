@@ -354,6 +354,7 @@ void category_menu() {
             category_menu();          
             break;
         case 0:
+            while (getchar() != '\n'); // Clear input buffer before returning
             return;                  // Go back to main menu
         default:
             printf("Invalid choice! Please try again.\n");
@@ -396,6 +397,7 @@ void supplier_menu() {
             supplier_menu();         
             break;
         case 0:
+            while (getchar() != '\n'); // Clear input buffer before returning
             return;                  // Go back to main menu
         default:
             printf("Invalid choice! Please try again.\n");
