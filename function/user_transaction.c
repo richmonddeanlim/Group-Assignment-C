@@ -35,7 +35,6 @@ void role4_Menu() {
                     break;
                 default:
                     printf("\nInvalid choice. Please try again.\n");
-                    while (getchar() != '\n');
                     break;
             }
         }
@@ -44,7 +43,8 @@ void role4_Menu() {
         }
     }
     printf("%s",menutext);
-    printf("You have succesfully logged out.\n\n");    
+    while (getchar() != '\n');
+    printf("You have succesfully logged out.\n\n"); 
 }
 
 void user() {

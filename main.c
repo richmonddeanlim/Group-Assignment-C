@@ -322,6 +322,7 @@ void displayMainMenu() {
                     break;
                 case 4:
                     role4_Menu();  // Pass 1 for admin
+                    while (getchar() != '\n');
                     break;
                 case 5:
                     adminMenu();
