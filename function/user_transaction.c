@@ -9,7 +9,7 @@ char *productFilepath = "../database/product.txt";
 // Testing
 const char* menutext = "\n--- User and Transaction Management System ---\n\n";
 
-void test_mains() {
+void role4_Menu() {
     int selection;
     while (true) {
         printf("%s",menutext);
@@ -35,7 +35,6 @@ void test_mains() {
                     break;
                 default:
                     printf("\nInvalid choice. Please try again.\n");
-                    while (getchar() != '\n');
                     break;
             }
         }
@@ -44,7 +43,8 @@ void test_mains() {
         }
     }
     printf("%s",menutext);
-    printf("You have succesfully logged out.\n\n");    
+    while (getchar() != '\n');
+    printf("You have succesfully logged out.\n\n"); 
 }
 
 void user() {
