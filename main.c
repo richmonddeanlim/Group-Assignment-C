@@ -169,6 +169,8 @@ void role2Menu(int isAdmin) {
 
 // Role 3 Menu - Category and Supplier Management (This is just a placeholder)
 void role3Menu(int isAdmin) {
+    load_category();  // Load categories from file
+    load_supplier();  // Load suppliers from file
     int choice;
     char choiceStr[10];
     do {
@@ -180,42 +182,31 @@ void role3Menu(int isAdmin) {
         printf("Current User: %s (Role: %s)\n", currentUser.username, currentUser.role);
         border(default_border);
         printf("\n=== Category and Supplier Management ===\n");
-        printf("1. Add Category/Supplier\n");
-        printf("2. Update Category/Supplier\n");
-        printf("3. Delete Category/Supplier\n");
-        printf("4. View Categories/Suppliers\n");
+        printf("1. Category\n");
+        printf("2. Suppliers\n");
+
         if (isAdmin) {
-            printf("5. Return to Main Menu\n");
+            printf("3. Return to Main Menu\n");
         } else {
-            printf("5. Logout\n");
-            printf("6. Exit\n");
+            printf("3. Logout\n");
+            printf("4. Exit\n");
         }
-        
+
         getValidInput("Enter your choice: ", choiceStr, sizeof(choiceStr));
         choice = atoi(choiceStr);
 
         switch (choice) {
             case 1:
-                printf("\nAdd Category/Supplier functionality will be implemented here\n");
-                system("pause");
+                category_menu();  // calls actual category menu
                 break;
             case 2:
-                printf("\nUpdate Category/Supplier functionality will be implemented here\n");
-                system("pause");
+                supplier_menu();  // calls actual supplier menu
                 break;
             case 3:
-                printf("\nDelete Category/Supplier functionality will be implemented here\n");
-                system("pause");
-                break;
-            case 4:
-                printf("\nView Categories/Suppliers functionality will be implemented here\n");
-                system("pause");
-                break;
-            case 5:
                 return;
-            case 6:
+            case 4:
                 if (!isAdmin) {
-                    printf("\nThank you for using the system. Goodbye!\n");
+                    printf("\nThank you for using our system. Goodbye!\n");
                     exit(0);
                 }
                 break;
@@ -225,6 +216,7 @@ void role3Menu(int isAdmin) {
         }
     } while (1);
 }
+
 
 // Role 4 Menu - User and Transaction Management (This is just a placeholder)
 void role4_Menu(int isAdmin) {
@@ -297,9 +289,8 @@ void displayMainMenu() {
             printf("2. Inventory and Stock Management\n");
             printf("3. Category and Supplier Management\n");
             printf("4. User and Transaction Management\n");
-            printf("5. Administrator Menu\n");
-            printf("6. Logout\n");
-            printf("7. Exit\n");
+            printf("5. Logout\n");
+            printf("6. Exit\n");
             
             getValidInput("Enter your choice: ", choiceStr, sizeof(choiceStr));
             choice = atoi(choiceStr);
@@ -318,11 +309,8 @@ void displayMainMenu() {
                     role4_Menu(1);  
                     break;
                 case 5:
-                    adminMenu();
-                    break;
-                case 6:
                     return;
-                case 7:
+                case 6:
                     printf("\nThank you for using the system. Goodbye!\n");
                     exit(0);
                 default:

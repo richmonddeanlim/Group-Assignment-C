@@ -1,46 +1,38 @@
-#include <stdio.h> 
+#include "../header/inventory_system.h"
 
-struct category {
-    int id;                       // category ID 
-    char name[100];               // category name
-    char description[200];        // category description
-};
 
-struct supplier {
-    int id;                       // supplier ID 
-    char name[100];               // supplier name
-    char contact[50];             // supplier contact/phone
-    char email[100];              // supplier email address
-};
-
-struct category categories[100];  // Array to store category structs
+struct category categories[max_categories];  // Array to store category structs
 int category_count = 0;            
 
-struct supplier suppliers[100];   // Array to store supplier structs
+struct supplier suppliers[max_suppliers];   // Array to store supplier structs
 int supplier_count = 0;            
 
 
 // Reads category information
 void load_category() {
-    FILE *file = fopen("category.txt", "r");  // Open category file for reading
-    if (file == NULL) {                       // Error message, file not found
-        printf("Category.txt file not found. Starting with empty category list.\n");
-        category_count = 0;                   // Start with empty list
+    FILE *file = fopen("database/category.txt", "r"); 
+    if (file == NULL) {
+        printf("database/ file not found. Starting with empty category list.\n");
+        category_count = 0;
         return;
     }
-    
-    category_count = 0;                    
-    
-    // Read lines from the file until no more lines
-    while (fscanf(file, "%d,%s,%s", &categories[category_count].id, categories[category_count].name, categories[category_count].description) == 3) {
-        category_count++;                   
+
+    category_count = 0;
+    char line[512];
+    while (fgets(line, sizeof(line), file)) {
+        if (sscanf(line, "%d,%99[^,],%199[^\n]", 
+            &categories[category_count].id, 
+            categories[category_count].name, 
+            categories[category_count].description) == 3) {
+            category_count++;
+        }
     }
-    fclose(file);                            // Close category file
+    fclose(file); 
 }
 
 // Save category information
 void save_category() {
-    FILE *file = fopen("category.txt", "w");  // Open category file for writing
+    FILE *file = fopen("database/category.txt", "w");  // Open category file for writing
     
     // Write each category to the file, one by one
     for (int i = 0; i < category_count; i++) {
@@ -75,7 +67,7 @@ int next_categoryID() {
 // Add a new category
 void add_category() {
     // Check if reached the maximum capacity
-    if (category_count >= 100) {
+    if (category_count >= max_suppliers) {
         printf("Maximum number of categories reached! Cannot add more.\n");
         return;
     }
@@ -163,25 +155,32 @@ void delete_category() {
 
 // Reads supplier information
 void load_supplier() {
-    FILE *file = fopen("supplier.txt", "r");        // Open supplier file for reading
+    FILE *file = fopen("database/supplier.txt", "r");        // Open supplier file for reading
     if (file == NULL) {                             // Error message, file not found
-        printf("Supplier.txt file not found. Starting with empty supplier list.\n");
+        printf("database/ file not found. Starting with empty supplier list.\n");
         supplier_count = 0;                         // Start with empty list
         return;
     }
     
     supplier_count = 0;                           
+    char line[512];
     
     // Read each line from the file
-    while (fscanf(file, "%d,%s,%s,%s", &suppliers[supplier_count].id, suppliers[supplier_count].name, suppliers[supplier_count].contact, suppliers[supplier_count].email) == 4) {
-        supplier_count++;                         
+    while (fgets(line, sizeof(line), file)) {
+        if (sscanf(line, "%d,%99[^,],%49[^,],%99[^\n]", 
+            &suppliers[supplier_count].id, 
+            suppliers[supplier_count].name, 
+            suppliers[supplier_count].contact, 
+            suppliers[supplier_count].email) == 4) {
+            supplier_count++;                         
+        }
     }
     fclose(file);                                  // Close supplier file
 }
 
 // Save supplier information
 void save_supplier() {
-    FILE *file = fopen("supplier.txt", "w");       // Open supplier file for writing
+    FILE *file = fopen("database/supplier.txt", "w");       // Open supplier file for writing
     
     // Write each supplier to the file
     for (int i = 0; i < supplier_count; i++) {
@@ -216,7 +215,7 @@ int next_supplierID() {
 // Add a new supplier
 void add_supplier() {
     // Check if reached the maximum capacity
-    if (supplier_count >= 100) {
+    if (supplier_count >= max_suppliers) {
         printf("Maximum number of suppliers reached! Cannot add more.\n");
         return;
     }
@@ -256,10 +255,18 @@ void view_supplier() {
 
 // Update a supplier
 void update_supplier() {
-    int id, i;                                     
+    int id, i;                                    
+    int result;
     
     printf("Enter supplier ID to update: ");         // Ask which supplier to change
-    scanf("%d", &id);
+    result = scanf("%d", &id);
+    
+    // Clear input buffer if scanf failed
+    if (result != 1) {
+        printf("Invalid input! Please enter a valid number.\n");
+        while (getchar() != '\n'); // Clear input buffer
+        return;
+    }
     
     // Look for the supplier with this ID
     for (i = 0; i < supplier_count; i++) {
@@ -283,10 +290,18 @@ void update_supplier() {
 
 // Delete a supplier
 void delete_supplier() {
-    int id, i;                                     
+    int id, i;                                    
+    int result;
     
     printf("Enter supplier ID to delete: ");         // Ask which one to delete
-    scanf("%d", &id);
+    result = scanf("%d", &id);
+    
+    // Clear input buffer if scanf failed
+    if (result != 1) {
+        printf("Invalid input! Please enter a valid number.\n");
+        while (getchar() != '\n'); // Clear input buffer
+        return;
+    }
     
     // Look for the supplier with this ID
     for (i = 0; i < supplier_count; i++) {
@@ -308,9 +323,18 @@ void delete_supplier() {
 // Category menu
 void category_menu() {
     int choice;                                    
+    int result;
     
     printf("\nCategory Menu:\n1. Add\n2. View\n3. Update\n4. Delete\n0. Back\nChoice: ");
-    scanf("%d", &choice);                     
+    result = scanf("%d", &choice);
+    
+    // Clear input buffer if scanf failed
+    if (result != 1) {
+        printf("Invalid choice! Please try again.\n");
+        while (getchar() != '\n'); // Clear input buffer
+        category_menu();
+        return;
+    }
     
     switch (choice) {
         case 1:
@@ -341,9 +365,18 @@ void category_menu() {
 // Supplier menu
 void supplier_menu() {
     int choice;                                   
+    int result;
     
     printf("\nSupplier Menu:\n1. Add\n2. View\n3. Update\n4. Delete\n0. Back\nChoice: ");
-    scanf("%d", &choice);                    
+    result = scanf("%d", &choice);
+    
+    // Clear input buffer if scanf failed
+    if (result != 1) {
+        printf("Invalid choice! Please try again.\n");
+        while (getchar() != '\n'); // Clear input buffer
+        supplier_menu();
+        return;
+    }
     
     switch (choice) {
         case 1:
@@ -369,43 +402,4 @@ void supplier_menu() {
             supplier_menu();         
             break;
     }
-}
-
-// Category and Supplier Management menu
-void main_menu() {
-    int choice;                                 
-    
-    printf("\n---------------------------------\nCategory and Supplier Management\n---------------------------------\n1. Category\n2. Supplier\n0. Exit\nChoice: ");
-    scanf("%d", &choice);                    
-    
-    switch (choice) {
-        case 1:
-            category_menu();         // 1 = Go to category menu
-            main_menu();            
-            break;
-        case 2:
-            supplier_menu();        // 2 = Go to supplier menu
-            main_menu();            
-            break;
-        case 0:
-            printf("Exiting program. Goodbye!\n");
-            return;                
-        default:
-            printf("Invalid choice! Please try again.\n");
-            main_menu();            
-            break;
-    }
-}
-
-// Main menu 
-int main() {
-    load_category();                             // Read categories 
-    load_supplier();                             // Read suppliers 
-    
-    main_menu();                                  // Call the main menu function
-    
-    save_category();                            // Save all category information
-    save_supplier();                             // Save all supplier information
-    
-    return 0;                                    
 }
