@@ -129,27 +129,23 @@ void role2Menu(int isAdmin) {
         getValidInput("Enter your choice: ", choiceStr, sizeof(choiceStr));
         choice = atoi(choiceStr);
 
-        clearScreen();
         switch (choice) {
             char ch;
             case 1:
                 add_record();
                 system("pause");
-                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
                 break;
             case 2:
                 update_stock();
                 system("pause");
-                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
                 break;
             case 3:
                 remove_discontinued();
                 system("pause");
-                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
                 break;
             case 4:
                 view_record();
-                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
+                system("pause");
                 break;
             case 5:
                 return;
