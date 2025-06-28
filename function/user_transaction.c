@@ -3,9 +3,9 @@
 FILE *productFile;
 FILE *recordFile;
 FILE *credentialFile;
-char *recordFilepath = "../database/inventory_record.txt";
-char *credentialFilepath = "../database/staff_credentials.txt";
-char *productFilepath = "../database/product.txt";
+char *recordFilepath = "database/inventory_record.txt";
+char *credentialFilepath = "database/staff_credentials.txt";
+char *productFilepath = "database/product.txt";
 // Testing
 const char* menutext = "\n--- User and Transaction Management System ---\n\n";
 
@@ -15,7 +15,7 @@ void role4_Menu() {
         printf("%s",menutext);
         printf("Welcome to User and Transaction Management System!\n\n");
         printf("1. Modify users\n");
-        printf("2. Modify transaction records\n");
+        printf("2. View transaction records\n");
         printf("3. Log out\n\n");
         bool validAnswer = false;
         while (validAnswer == false) {
