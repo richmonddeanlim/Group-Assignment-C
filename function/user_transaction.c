@@ -88,6 +88,7 @@ void transactions() {
                     break; 
                 case 3:
                     validAnswer = true;
+                    while (getchar() != '\n');
                     return;
                 default:
                     printf("\nInvalid choice. Please try again.\n");
