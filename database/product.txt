@@ -1,3 +1,6 @@
 M001,iPhone,1,2,200.99
 C001,Laptop,2,3,99.99
 A001,Charger,3,3,223.00
+A002,Logitech Mouse,3,3,79.90
+C002,MacBook Air M2,2,1,5299.00
+MOO2,Galaxy A54,1,1,1899.00
