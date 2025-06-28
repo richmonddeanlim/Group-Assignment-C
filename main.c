@@ -128,12 +128,13 @@ void role2Menu(int isAdmin) {
         
         getValidInput("Enter your choice: ", choiceStr, sizeof(choiceStr));
         choice = atoi(choiceStr);
+        system("cls");
 
         switch (choice) {
             char ch;
             case 1:
                 add_record();
-                system("pause");
+                system("pause");    
                 break;
             case 2:
                 update_stock();

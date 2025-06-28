@@ -370,8 +370,8 @@ void add_record()
         printf("\nDo you still want to contiinue (y/n): ");
         scanf("%c", &record_loop);
 
-        
     }
+    while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input     
 }
 
 // view record
@@ -396,6 +396,7 @@ void view_record()
         return;  // Return to main menu
     }
 
+    system("cls");
 
     char record_data[100][100][100];
     int len_record = 0;
@@ -556,15 +557,19 @@ void view_record()
     // Check if there are any stocks to display
     if (unique_count == 0) {
         printf("\nNo stock found for the selected view.\n");
+        char ch;
         switch(view_choice) {
             case 1:
                 printf("There are no active products in the inventory.\n");
+                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
                 break;
             case 2:
                 printf("There are no discontinued products in the inventory.\n");
+                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
                 break;
             case 3:
                 printf("There are no products in the inventory.\n");
+                while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
                 break;
         }
         border(default_border + 21);
@@ -600,6 +605,9 @@ void view_record()
     // Print table footer
     border(default_border + 21);
     printf("\n");
+
+    char ch;
+    while ((ch = getchar()) != '\n' && ch != EOF);// clearing previous input
 }
 
 // update stock level
@@ -649,6 +657,8 @@ void update_stock()
         if (choice == 4) {
             return;  // Return to main menu
         }
+
+        system("cls");
 
         //getting user input
         printf("Enter the product id ([A/M/C])xxx: ");
@@ -886,7 +896,7 @@ void remove_discontinued()
     }
 
     // Add new record with Discontinued status
-    fprintf(file_record, "%s,%s,Discontinue,0,Discontinued\n", 
+    fprintf(file_record, "%s,%s,Discontinue,0,Discontinued,%s\n", 
             record.date, 
             record.product_id,
             currentUser.username);
