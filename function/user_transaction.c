@@ -3,9 +3,9 @@
 FILE *productFile;
 FILE *recordFile;
 FILE *credentialFile;
-char *recordFilepath = "../database/inventory_record.txt";
-char *credentialFilepath = "../database/staff_credentials.txt";
-char *productFilepath = "../database/product.txt";
+char *recordFilepath = "database/inventory_record.txt";
+char *credentialFilepath = "database/staff_credentials.txt";
+char *productFilepath = "database/product.txt";
 // Testing
 const char* menutext = "\n--- User and Transaction Management System ---\n\n";
 
