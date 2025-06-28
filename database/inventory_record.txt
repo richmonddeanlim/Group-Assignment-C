@@ -33,3 +33,10 @@ Date,Product_Id,Action,Quantity,Status,User_Id,Username_Id
 08-07-2025,M001,Out,3,Active,user2
 09-07-2025,M001,Return,2,Active,user3
 10-07-2025,M001,Discontinue,0,Discontinued,user4
+12-10-2025,A001,Out,100,Active,user2
+12-10-2025,A001,Restock,20,Active,user2
+12-10-2025,A001,Restock,20,Active,user2
+28-06-2025,A001,Restock,20,Active,user2
+28-06-2025,A001,Restock,20,Active,user2
+28-06-2025,A001,Restock,20,Active,user2
+28-06-2025,A001,Discontinue,0,Discontinued
