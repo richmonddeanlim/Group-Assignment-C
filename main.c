@@ -131,7 +131,6 @@ void role2Menu(int isAdmin) {
         system("cls");
 
         switch (choice) {
-            char ch;
             case 1:
                 add_record();
                 system("pause");    
