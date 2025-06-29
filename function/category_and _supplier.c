@@ -256,17 +256,9 @@ void view_supplier() {
 // Update a supplier
 void update_supplier() {
     int id, i;                                    
-    int result;
     
     printf("Enter supplier ID to update: ");         // Ask which supplier to change
-    result = scanf("%d", &id);
-    
-    // Clear input buffer if scanf failed
-    if (result != 1) {
-        printf("Invalid input! Please enter a valid number.\n");
-        while (getchar() != '\n'); // Clear input buffer
-        return;
-    }
+    scanf("%d", &id);
     
     // Look for the supplier with this ID
     for (i = 0; i < supplier_count; i++) {
@@ -291,17 +283,9 @@ void update_supplier() {
 // Delete a supplier
 void delete_supplier() {
     int id, i;                                    
-    int result;
     
     printf("Enter supplier ID to delete: ");         // Ask which one to delete
-    result = scanf("%d", &id);
-    
-    // Clear input buffer if scanf failed
-    if (result != 1) {
-        printf("Invalid input! Please enter a valid number.\n");
-        while (getchar() != '\n'); // Clear input buffer
-        return;
-    }
+    scanf("%d", &id);
     
     // Look for the supplier with this ID
     for (i = 0; i < supplier_count; i++) {
