@@ -184,7 +184,7 @@ void add_record()
             
             // getting user input
             printf("Enter the date (dd-mm-yyyy): ");
-            scanf("%s", record.date);
+            scanf("%s", &record.date);
             
             // getting arr len
             arr_len(record.date, &array_len);
@@ -283,7 +283,7 @@ void add_record()
                     }
                     
                     // break if the condition is true
-                    if(strcmp(condition == "True") == 0)
+                    if(condition == "True") 
                     {
                         break;
                     }
